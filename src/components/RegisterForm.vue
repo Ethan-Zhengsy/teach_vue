@@ -63,6 +63,10 @@
     </span>
     </div>
 
+    <div v-if="validationErrors.general" class="error-msg" style="text-align:center;">
+      {{ validationErrors.general }}
+    </div>
+
     <!-- 提交按钮 -->
     <!--
       type：按钮类型
@@ -82,9 +86,12 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '../utils/api' // 新增
 
-// 注册表单组件
+const router = useRouter() // 新增：用于跳转
+
+// formData：表单数据
 const formData = reactive({
   username: '',
   password: '',
@@ -97,7 +104,8 @@ const validationErrors = reactive({
   username: '',
   password: '',
   role: '',
-  email: ''
+  email: '',
+  general: '' // 新增：用于显示通用错误
 })
 
 // 提交状态
@@ -116,6 +124,7 @@ const validateForm = () => {
   validationErrors.password = ''
   validationErrors.role = ''
   validationErrors.email = ''
+  validationErrors.general = ''
 
   if (!formData.username.trim()) {
     validationErrors.username = '用户名不能为空'
@@ -154,12 +163,32 @@ const handleSubmit = async () => {
       email: formData.email,
       userType: formData.role === 'teacher' ? 'TEACHER' : 'STUDENT'
     })
-    // 保存 token
-    localStorage.setItem('token', res.data.token)
-    alert('注册成功！')
-    // 这里可以跳转到登录页
+    if (res.status === 200) { // 显式判断
+      localStorage.setItem('token', res.data.token) // 存储token
+      alert('注册成功！请登录')
+      router.push('/')
+    } else {
+      validationErrors.general = '注册失败，请重试'
+    }
   } catch (error) {
-    alert('注册失败，请重试')
+    // 处理后端返回的错误信息
+    if (error.response && error.response.status === 400 && typeof error.response.data === 'string') {
+      const msg = error.response.data
+      // 根据后端返回的错误内容，分配到对应字段
+      if (msg.includes('用户名')) {
+        validationErrors.username = msg
+      } else if (msg.includes('密码')) {
+        validationErrors.password = msg
+      } else if (msg.includes('邮箱')) {
+        validationErrors.email = msg
+      } else if (msg.includes('身份') || msg.includes('UserType')) {
+        validationErrors.role = '请选择正确的身份'
+      } else {
+        validationErrors.general = msg
+      }
+    } else {
+      validationErrors.general = '注册失败，请重试'
+    }
   } finally {
     isSubmitting.value = false
   }
