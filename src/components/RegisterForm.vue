@@ -163,13 +163,16 @@ const handleSubmit = async () => {
       email: formData.email,
       userType: formData.role === 'teacher' ? 'TEACHER' : 'STUDENT'
     })
-    if (res.status === 200) { // 显式判断
-      localStorage.setItem('token', res.data.token) // 存储token
-      alert('注册成功！请登录')
-      router.push('/')
-    } else {
-      validationErrors.general = '注册失败，请重试'
-    }
+    localStorage.setItem('token', res.data.token) // 存储token
+    alert('注册成功！请登录')
+    router.push('/')
+    // if (res.status === 200) { // 显式判断
+    //   localStorage.setItem('token', res.data.token) // 存储token
+    //   alert('注册成功！请登录')
+    //   router.push('/')
+    // } else {
+    //   validationErrors.general = '注册失败，请重试'
+    // }
   } catch (error) {
     // 处理后端返回的错误信息
     if (error.response && error.response.status === 400 && typeof error.response.data === 'string') {
