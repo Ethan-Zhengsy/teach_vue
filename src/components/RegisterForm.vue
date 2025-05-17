@@ -82,6 +82,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import api from '../utils/api' // 新增
 
 // 注册表单组件
 const formData = reactive({
@@ -146,10 +147,17 @@ const handleSubmit = async () => {
   if (!validateForm()) return
   isSubmitting.value = true
   try {
-    // 这里替换为实际的 API 调用
-    await new Promise(resolve => setTimeout(resolve, 1500)) // 模拟 API 调用
+    // 调用后端注册接口
+    const res = await api.post('/register', {
+      username: formData.username,
+      password: formData.password,
+      email: formData.email,
+      userType: formData.role === 'teacher' ? 'TEACHER' : 'STUDENT'
+    })
+    // 保存 token
+    localStorage.setItem('token', res.data.token)
     alert('注册成功！')
-    // 实际项目中这里可以跳转到登录页
+    // 这里可以跳转到登录页
   } catch (error) {
     alert('注册失败，请重试')
   } finally {

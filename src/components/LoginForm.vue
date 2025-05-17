@@ -70,6 +70,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import api from '../utils/api' // 新增
 
 // formData：表单数据
 const formData = reactive({
@@ -112,11 +113,15 @@ const handleSubmit = async () => {
   if (!validateForm()) return
   isSubmitting.value = true
   try {
-    // 这里替换为实际的 API 调用
-    // const response = await axios.post('/api/login', formData)
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // 调用后端登录接口
+    const res = await api.post('/login', {
+      username: formData.username,
+      password: formData.password
+    })
+    // 保存 token
+    localStorage.setItem('token', res.data.token)
     alert('登录成功！')
-    // 实际项目中这里可以跳转到首页
+    // 这里可以跳转页面
   } catch (error) {
     alert('登录失败，请检查用户名和密码')
   } finally {
