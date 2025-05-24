@@ -157,7 +157,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     // 调用后端注册接口
-    const res = await api.post('/register', {
+    const res = await api.post('/auth/register', {
       username: formData.username,
       password: formData.password,
       email: formData.email,

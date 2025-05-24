@@ -119,7 +119,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     // 调用后端登录接口
-    const res = await api.post('/login', {
+    const res = await api.post('/auth/login', {
       username: formData.username,
       password: formData.password
     })
