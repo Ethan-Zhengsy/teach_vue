@@ -4,6 +4,11 @@ import vue from '@vitejs/plugin-vue'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  // resolve: {
+  //   alias: {
+  //     '@': '/src' // 设置 @ 指向 src 目录
+  //   }
+  // },
   server: {
     port: 8080,  // 前端端口
     host: true,
