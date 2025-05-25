@@ -4,6 +4,7 @@ import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import StudentPageView from '../views/StudentPageView.vue'
 import TeacherPageView from '../views/TeacherPageView.vue'
+import AccountEditView from '../views/AccountEditView.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/student',
     name: 'student',
     component: StudentPageView
+  },
+  {
+    path: '/account/edit',
+    name: 'accountEdit',
+    component: AccountEditView
   }
 ]
 

@@ -125,6 +125,12 @@ const handleSubmit = async () => {
     })
     if (res.status === 200 && res.data.token) {
       localStorage.setItem('token', res.data.token) // 存储token
+      localStorage.setItem('userInfo', JSON.stringify({
+        userId: res.data.userId,
+        username: res.data.username,
+        email: res.data.email,
+        userType: res.data.userType
+      }))
       alert('登录成功！')
       // 跳转到首页或其他页面
       router.push('/home')
