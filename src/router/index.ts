@@ -8,31 +8,37 @@ import AccountEditView from '../views/AccountEditView.vue'
 
 const routes = [
   {
+    // 登录页面路由
     path: '/',
     name: 'login',
     component: LoginView
   },
   {
+    // 注册页面路由
     path: '/register',
     name: 'register',
     component: RegisterView
   },
   {
+    // 首页路由（未完成）
     path: '/home',
     name: 'home',
     component: HomeView
   },
   {
+    // 教师信息完善页面路由
     path: '/teacher',
     name: 'teacher',
     component: TeacherPageView
   },
   {
+    // 学生信息完善页面路由
     path: '/student',
     name: 'student',
     component: StudentPageView
   },
   {
+    // 账户信息编辑页面路由
     path: '/account/edit',
     name: 'accountEdit',
     component: AccountEditView

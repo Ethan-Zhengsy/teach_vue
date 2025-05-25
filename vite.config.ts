@@ -10,12 +10,13 @@ export default defineConfig({
   //   }
   // },
   server: {
+    // 设置服务器配置
     port: 8080,  // 前端端口
-    host: true,
+    host: true,  // 允许外部访问
     proxy: {
       '/api': {
         target: 'http://localhost:8088', // 后端地址
-        changeOrigin: true,
+        changeOrigin: true, // 是否跨域
         // rewrite: (path) => path.replace(/^\/api/, '') // 如有需要可开启
       }
     }
