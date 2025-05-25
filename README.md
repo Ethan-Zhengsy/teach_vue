@@ -9,11 +9,11 @@
 ## 如何查看页面？
 
 在localhost:8080后加上
-> **/register：**可访问注册页面
-> **/home：**可访问主页（未完成）
-> **/teacher：**可访问教师信息完善页面
-> **/student：**可访问学生信息完善页面
-> **/account/edit：**可访问账户信息编辑页面
+> **/register：** 可访问注册页面  
+> **/home：** 可访问主页（未完成）  
+> **/teacher：** 可访问教师信息完善页面  
+> **/student：** 可访问学生信息完善页面  
+> **/account/edit：** 可访问账户信息编辑页面  
 具体可查看路由文件 teach_vue\src\router\index.ts
 
 ## 克隆 & 运行项目
