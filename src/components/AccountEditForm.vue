@@ -3,6 +3,30 @@
     <!-- h2 页面标题 -->
     <h2>修改账户信息</h2>
 
+    <!-- 头像上传区域 -->
+    <!--
+      v-if 条件渲染
+      v-model 双向绑定
+      @change 事件处理
+      :src 动态绑定图片地址
+      :class 动态绑定类名
+      v-else 显示默认占位符
+      class 样式类名
+      input[type="file"] 文件输入框
+      accept 限制文件类型
+      @change 处理文件选择事件
+      avatarUrl 头像URL
+      avatarError 头像错误信息
+    -->
+    <div class="avatar-upload">
+      <div class="avatar-preview">
+        <img v-if="avatarUrl" :src="avatarUrl" alt="头像" />
+        <div v-else class="avatar-placeholder">无头像</div>
+      </div>
+      <input type="file" accept="image/*" @change="handleAvatarChange" />
+      <div v-if="avatarError" class="error-msg">{{ avatarError }}</div>
+    </div>
+
     <form @submit.prevent="handleSubmit" class="edit-form">
       <!-- form-group 表单组 -->
       <!--
@@ -104,7 +128,8 @@ const form = reactive({
   username: '',
   password: '',
   email: '',
-  userType: ''
+  userType: '',
+  avatar: '' // 新增：头像URL
 })
 
 // 定义错误信息
@@ -118,12 +143,46 @@ const errors = reactive({
 // 定义提交状态
 const isSubmitting = ref(false)
 
+// 头像相关
+const avatarUrl = ref('')
+const avatarError = ref('')
+
 // 假设token中有userId和userType等信息，实际可根据你的登录逻辑调整
 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
 form.userId = userInfo.userId || ''
 form.username = userInfo.username || ''
 form.email = userInfo.email || ''
 form.userType = userInfo.userType || ''
+form.avatar = userInfo.avatar || ''
+avatarUrl.value = form.avatar
+
+// 头像上传处理
+const handleAvatarChange = async (e) => {
+  avatarError.value = ''
+  const file = e.target.files[0]
+  if (!file) return
+  // 限制文件大小/类型
+  if (!file.type.startsWith('image/')) {
+    avatarError.value = '请选择图片文件'
+    return
+  }
+  const formData = new FormData()
+  formData.append('file', file)
+  try {
+    const res = await api.post('/file/uploadavatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    if (res.status === 200 && res.data) {
+      avatarUrl.value = res.data
+      form.avatar = res.data
+      avatarError.value = ''
+    } else {
+      avatarError.value = '上传失败，请重试'
+    }
+  } catch (err) {
+    avatarError.value = '上传失败，请重试'
+  }
+}
 
 // 定义表单验证函数
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -160,7 +219,8 @@ const handleSubmit = async () => {
       username: form.username,
       password: form.password,
       email: form.email,
-      userType: form.userType
+      userType: form.userType,
+      avatar: form.avatar // 新增：头像URL
     })
     if (res.status === 200) {
       alert('修改成功！')
@@ -183,6 +243,34 @@ h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
+}
+.avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 1.5rem;
+}
+.avatar-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatar-placeholder {
+  color: #aaa;
+  font-size: 14px;
+}
+input[type="file"] {
+  font-size: 0.95rem;
 }
 .form-group {
   margin-bottom: 1.5rem;
