@@ -5,6 +5,8 @@ import HomeView from '../views/HomeView.vue'
 import StudentPageView from '../views/StudentPageView.vue'
 import TeacherPageView from '../views/TeacherPageView.vue'
 import AccountEditView from '../views/AccountEditView.vue'
+import AccountInfoView from '../views/AccountInfoView.vue'
+
 
 const routes = [
   {
@@ -42,6 +44,11 @@ const routes = [
     path: '/account/edit',
     name: 'accountEdit',
     component: AccountEditView
+  },
+  {
+    path: '/account/info',
+    name: 'accountInfo',
+    component: AccountInfoView
   }
 ]
 
