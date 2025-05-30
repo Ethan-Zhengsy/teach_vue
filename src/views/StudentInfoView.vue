@@ -6,6 +6,7 @@
 </template>
 
 <script setup>
+// 使用 src\components\StudentInfoForm.vue 组件
 import StudentInfoView from '../components/StudentInfoForm.vue'
 </script>
 
@@ -19,4 +20,5 @@ import StudentInfoView from '../components/StudentInfoForm.vue'
   max-width: 500px;
   margin: 40px auto;
 }
+/* 其余样式在 StudentInfoForm.vue 中定义 */
 </style>

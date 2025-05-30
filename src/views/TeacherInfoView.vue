@@ -1,10 +1,12 @@
 <template>
   <div class="teacher-info-container">
+    <!-- 使用 src\components\TeacherInfoForm.vue 组件 -->
     <TeacherInfoForm />
   </div>
 </template>
 
 <script setup>
+// 使用 src\components\TeacherInfoForm.vue 组件
 import TeacherInfoForm from '../components/TeacherInfoForm.vue'
 </script>
 
@@ -18,4 +20,5 @@ import TeacherInfoForm from '../components/TeacherInfoForm.vue'
   max-width: 500px;
   margin: 40px auto;
 }
+/* 其余样式在 TeacherInfoForm.vue 中定义 */
 </style>

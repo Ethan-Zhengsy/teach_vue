@@ -129,7 +129,7 @@ const form = reactive({
   password: '',
   email: '',
   userType: '',
-  avatar: '' // 新增：头像URL
+  // avatar: '' // 新增：头像URL
 })
 
 // 定义错误信息

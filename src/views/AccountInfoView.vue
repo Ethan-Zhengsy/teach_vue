@@ -6,6 +6,7 @@
 </template>
 
 <script setup>
+// 使用 src\components\AccountInfoForm.vue 组件
 import AccountInfoForm from '../components/AccountInfoForm.vue'
 </script>
 
@@ -19,4 +20,5 @@ import AccountInfoForm from '../components/AccountInfoForm.vue'
   max-width: 400px;
   margin: 40px auto;
 }
+/* 其余样式在 AccountInfoForm.vue 中定义 */
 </style>

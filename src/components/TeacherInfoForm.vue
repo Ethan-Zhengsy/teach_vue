@@ -1,6 +1,9 @@
 <template>
   <div>
+    <!-- h2 : 页面标题 -->
     <h2>教师信息</h2>
+    <!-- v-if : 根据加载状态和错误信息显示不同内容 -->
+     
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="error" class="error-msg">{{ error }}</div>
     <div v-else class="info-list">

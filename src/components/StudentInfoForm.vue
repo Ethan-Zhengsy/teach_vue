@@ -1,8 +1,14 @@
 <template>
   <div>
+    <!-- h2 : 页面标题 -->
     <h2>学生信息</h2>
+    <!-- v-if : 根据加载状态和错误信息显示不同内容 -->
+    <!-- loading : 加载状态  -->
     <div v-if="loading" class="loading">加载中...</div>
+    <!-- error : 错误信息 -->
     <div v-else-if="error" class="error-msg">{{ error }}</div>
+    <!-- info-list : 显示学生信息 -->
+    <!-- v-else : 正常显示学生信息 -->
     <div v-else class="info-list">
       <div class="info-item"><span>姓名：</span>{{ info.name || '-' }}</div>
       <div class="info-item"><span>性别：</span>{{ genderText(info.gender) }}</div>
@@ -22,10 +28,12 @@
 import { ref, onMounted } from 'vue'
 import api from '../utils/api'
 
+// 定义响应式变量
 const info = ref({})
 const loading = ref(true)
 const error = ref('')
 
+// 性别转换函数
 function genderText(gender) {
   if (gender === 'MALE') return '男'
   if (gender === 'FEMALE') return '女'
@@ -33,6 +41,7 @@ function genderText(gender) {
   return '-'
 }
 
+// 组件挂载时获取学生信息
 onMounted(async () => {
   loading.value = true
   error.value = ''
