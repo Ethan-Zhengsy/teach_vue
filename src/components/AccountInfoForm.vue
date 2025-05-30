@@ -2,6 +2,11 @@
   <div>
     <!-- h2 : 页面标题 -->
     <h2>个人信息</h2>
+    <!-- 头像显示区域 -->
+    <div class="avatar-info">
+      <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="头像" class="avatar-img" />
+      <div v-else class="avatar-placeholder">无头像</div>
+    </div>
     <!-- v-if : 条件渲染 -->
     <!-- loading : 加载状态 -->
     <div v-if="loading" class="loading">加载中...</div>
@@ -42,7 +47,16 @@ onMounted(async () => {
   try {
     const res = await api.get('/user/info/user')
     if (res.status === 200 && res.data) {
-      userInfo.value = res.data
+      // 优先用后端返回的头像，否则用本地缓存
+      const localAvatar = (() => {
+        try {
+          return JSON.parse(localStorage.getItem('userInfo') || '{}').avatar || ''
+        } catch { return '' }
+      })()
+      userInfo.value = {
+        ...res.data,
+        avatar: res.data.avatar || localAvatar
+      }
     } else {
       error.value = '获取信息失败'
     }
@@ -59,6 +73,32 @@ h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
+}
+.avatar-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f0f0f0;
+  border: 1px solid #eee;
+}
+.avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 1px solid #eee;
 }
 .info-list {
   margin-top: 1rem;

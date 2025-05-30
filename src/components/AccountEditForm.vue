@@ -129,7 +129,6 @@ const form = reactive({
   password: '',
   email: '',
   userType: '',
-  // avatar: '' // 新增：头像URL
 })
 
 // 定义错误信息
@@ -153,8 +152,7 @@ form.userId = userInfo.userId || ''
 form.username = userInfo.username || ''
 form.email = userInfo.email || ''
 form.userType = userInfo.userType || ''
-form.avatar = userInfo.avatar || ''
-avatarUrl.value = form.avatar
+avatarUrl.value = userInfo.avatar || ''
 
 // 头像上传处理
 const handleAvatarChange = async (e) => {
@@ -176,6 +174,10 @@ const handleAvatarChange = async (e) => {
       avatarUrl.value = res.data
       form.avatar = res.data
       avatarError.value = ''
+      // 同步保存到 localStorage
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+      userInfo.avatar = res.data
+      localStorage.setItem('userInfo', JSON.stringify(userInfo))
     } else {
       avatarError.value = '上传失败，请重试'
     }
@@ -220,7 +222,6 @@ const handleSubmit = async () => {
       password: form.password,
       email: form.email,
       userType: form.userType,
-      // avatar: form.avatar // 新增：头像URL
     })
     if (res.status === 200) {
       alert('修改成功！')
