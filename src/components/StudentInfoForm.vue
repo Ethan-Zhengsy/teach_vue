@@ -1,5 +1,5 @@
 <template>
-  <div class="student-info-container">
+  <div>
     <h2>学生信息</h2>
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="error" class="error-msg">{{ error }}</div>
@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup>  
 import { ref, onMounted } from 'vue'
 import api from '../utils/api'
 
@@ -51,16 +51,7 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.student-info-container {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 500px;
-  margin: 40px auto;
-}
+<style scoped>  
 h2 {
   text-align: center;
   margin-bottom: 1.5rem;

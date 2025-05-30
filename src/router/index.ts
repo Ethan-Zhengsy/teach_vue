@@ -6,6 +6,7 @@ import StudentPageView from '../views/StudentPageView.vue'
 import TeacherPageView from '../views/TeacherPageView.vue'
 import AccountEditView from '../views/AccountEditView.vue'
 import AccountInfoView from '../views/AccountInfoView.vue'
+import StudentInfoView from '../views/StudentInfoView.vue'
 
 
 const routes = [
@@ -49,6 +50,11 @@ const routes = [
     path: '/account/info',
     name: 'accountInfo',
     component: AccountInfoView
+  },
+  {
+    path: '/student/info',
+    name: 'studentInfo',
+    component: StudentInfoView
   }
 ]
 
