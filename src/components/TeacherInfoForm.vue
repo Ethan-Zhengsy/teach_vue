@@ -3,8 +3,9 @@
     <!-- h2 : 页面标题 -->
     <h2>教师信息</h2>
     <!-- v-if : 根据加载状态和错误信息显示不同内容 -->
-     
+    <!-- loading : 加载状态  -->
     <div v-if="loading" class="loading">加载中...</div>
+    <!-- error : 错误信息 -->
     <div v-else-if="error" class="error-msg">{{ error }}</div>
     <div v-else class="info-list">
       <div class="info-item"><span>姓名：</span>{{ info.name || '-' }}</div>

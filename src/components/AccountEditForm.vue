@@ -220,7 +220,7 @@ const handleSubmit = async () => {
       password: form.password,
       email: form.email,
       userType: form.userType,
-      avatar: form.avatar // 新增：头像URL
+      // avatar: form.avatar // 新增：头像URL
     })
     if (res.status === 200) {
       alert('修改成功！')
