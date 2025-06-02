@@ -28,7 +28,7 @@
         <input
           type="number"
           min="0"
-          max="100"
+          max="150"
           step="1"
           v-model.number="filter.minScore"
           placeholder="最低成绩(可选)"

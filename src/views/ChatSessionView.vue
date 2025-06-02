@@ -2,7 +2,10 @@
   <div class="chat-session-container">
     <!-- 左侧会话列表 -->
     <div class="chat-list">
-      <div class="chat-list-title">会话列表</div>
+      <div class="chat-list-title">
+        会话列表
+        <span v-if="unreadCount > 0" class="unread-dot">{{ unreadCount }}</span>
+      </div>
       <div v-if="loading" class="loading">加载中...</div>
       <div v-else-if="error" class="error-msg">{{ error }}</div>
       <ul v-else>
@@ -34,18 +37,22 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import api from '../utils/api'
-import ChatWindow from '../components/ChatWindow.vue' // 你需要新建该组件
+import ChatWindow from '../components/ChatWindow.vue'
 
 const sessions = ref([])
 const loading = ref(true)
 const error = ref('')
 const activeSessionId = ref(null)
+const unreadCount = ref(0)
 
 const activeSession = computed(() =>
   sessions.value.find(s => s.sessionId === activeSessionId.value)
 )
 
-onMounted(fetchSessions)
+onMounted(() => {
+  fetchSessions()
+  fetchUnreadCount()
+})
 
 async function fetchSessions() {
   loading.value = true
@@ -66,6 +73,17 @@ async function fetchSessions() {
     error.value = '获取会话列表失败'
   } finally {
     loading.value = false
+  }
+}
+
+async function fetchUnreadCount() {
+  try {
+    const res = await api.get('/chat/UnreadMsgCount')
+    if (res.status === 200 && typeof res.data === 'number') {
+      unreadCount.value = res.data
+    }
+  } catch (e) {
+    // 可忽略错误
   }
 }
 
@@ -114,6 +132,19 @@ function formatTime(timeStr) {
   color: #6366f1;
   padding: 1.2rem 1rem 0.8rem 1.2rem;
   border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+.unread-dot {
+  display: inline-block;
+  background: #ff4d4f;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0 8px;
+  font-size: 0.95rem;
+  margin-left: 8px;
+  vertical-align: middle;
+  min-width: 22px;
+  text-align: center;
 }
 .chat-list ul {
   list-style: none;

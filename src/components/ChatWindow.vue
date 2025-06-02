@@ -16,13 +16,16 @@
         <div
           v-for="(msg, idx) in messages"
           :key="msg.messageId || idx"
-          :class="['chat-msg', msg.fromUserId === userId ? 'mine' : 'other']"
+          :class="['chat-msg', msg.pos === 'right' ? 'mine' : 'other']"
         >
           <div class="msg-content">{{ msg.content }}</div>
           <div class="msg-meta">
-            <span>{{ msg.fromUserName || (msg.fromUserId === userId ? '我' : '对方') }}</span>
-            <span class="msg-time">{{ formatTime(msg.sendTime) }}</span>
+            <span>{{ msg.senderName || (msg.pos === 'right' ? '我' : '对方') }}</span>
+            <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
           </div>
+        </div>
+        <div v-if="hasMore" class="load-more" @click="loadMore" :disabled="loadingMore">
+          {{ loadingMore ? '加载中...' : '加载更多历史消息' }}
         </div>
       </div>
     </div>
@@ -51,7 +54,6 @@ const props = defineProps({
 })
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
-const userId = userInfo.userId
 const userType = userInfo.userType
 
 const messages = ref([])
@@ -61,25 +63,63 @@ const inputMsg = ref('')
 const sending = ref(false)
 const msgListRef = ref(null)
 
-// 加载消息
-async function fetchMessages() {
-  loading.value = true
-  error.value = ''
+// 分页相关
+const page = ref(0)
+const size = ref(20)
+const hasMore = ref(false)
+const loadingMore = ref(false)
+let totalPages = 1
+
+// 加载消息历史（分页，倒序追加）
+async function fetchMessages(init = true) {
+  if (init) {
+    page.value = 0
+    messages.value = []
+  }
+  const params = {
+    sessionId: props.sessionId,
+    page: page.value,
+    size: size.value
+  }
+  if (init) {
+    loading.value = true
+    error.value = ''
+  } else {
+    loadingMore.value = true
+  }
   try {
-    // 假设消息接口为 /api/chat/messages?sessionId=xxx
-    const res = await api.get('/chat/messages', { params: { sessionId: props.sessionId } })
-    if (res.status === 200 && Array.isArray(res.data)) {
-      messages.value = res.data
+    const res = await api.get('/chat/messages', { params })
+    if (
+      res.status === 200 &&
+      res.data &&
+      Array.isArray(res.data.content)
+    ) {
+      // 新消息在后面，历史消息在前面
+      if (init) {
+        messages.value = res.data.content.reverse()
+      } else {
+        messages.value = res.data.content.reverse().concat(messages.value)
+      }
+      totalPages = res.data.totalPages || 1
+      hasMore.value = (page.value + 1) < totalPages
       await nextTick()
-      scrollToBottom()
+      if (init) scrollToBottom()
     } else {
-      error.value = '未获取到消息'
+      if (init) error.value = '未获取到消息'
     }
   } catch (e) {
-    error.value = '获取消息失败'
+    if (init) error.value = '获取消息失败'
   } finally {
-    loading.value = false
+    if (init) loading.value = false
+    else loadingMore.value = false
   }
+}
+
+// 加载更多历史消息
+async function loadMore() {
+  if (loadingMore.value || !hasMore.value) return
+  page.value += 1
+  await fetchMessages(false)
 }
 
 // 发送消息
@@ -87,14 +127,14 @@ async function sendMsg() {
   if (!inputMsg.value.trim()) return
   sending.value = true
   try {
-    // 假设发送消息接口为 /api/chat/messages，body: { sessionId, content }
     const res = await api.post('/chat/messages', {
       sessionId: props.sessionId,
       content: inputMsg.value.trim()
     })
     if (res.status === 200) {
       inputMsg.value = ''
-      await fetchMessages()
+      // 重新加载最新消息
+      await fetchMessages(true)
     } else {
       error.value = '发送失败'
     }
@@ -117,11 +157,11 @@ function scrollToBottom() {
 }
 
 watch(() => props.sessionId, () => {
-  fetchMessages()
+  fetchMessages(true)
 })
 
 onMounted(() => {
-  fetchMessages()
+  fetchMessages(true)
 })
 </script>
 
@@ -173,6 +213,18 @@ onMounted(() => {
   color: #888;
   display: flex;
   justify-content: space-between;
+}
+.load-more {
+  text-align: center;
+  color: #6366f1;
+  cursor: pointer;
+  margin: 0.5rem 0;
+  font-size: 0.98rem;
+  user-select: none;
+}
+.load-more:disabled {
+  color: #bbb;
+  cursor: not-allowed;
 }
 .chat-input-bar {
   display: flex;
