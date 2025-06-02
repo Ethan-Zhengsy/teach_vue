@@ -17,6 +17,13 @@
       <div class="info-item"><span>电话：</span>{{ info.phone || '-' }}</div>
       <div class="info-item"><span>补充说明：</span>{{ info.addition || '-' }}</div>
     </div>
+    <!-- 会话按钮 -->
+    <div class="chat-btn-wrap">
+      <button class="chat-btn" @click="startChat" :disabled="chatLoading">
+        {{ chatLoading ? '进入中...' : '私聊会话' }}
+      </button>
+      <div v-if="chatError" class="chat-error">{{ chatError }}</div>
+    </div>
     <!-- 评价展示区域 -->
     <div class="judge-section">
       <h3>评价</h3>
@@ -35,10 +42,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from '../utils/api'
 
 const route = useRoute()
+const router = useRouter()
+
 const info = ref({})
 const loading = ref(true)
 const error = ref('')
@@ -47,6 +56,11 @@ const error = ref('')
 const judges = ref([])
 const judgeLoading = ref(true)
 const judgeError = ref('')
+
+// 聊天相关
+const chatLoading = ref(false)
+const chatError = ref('')
+const isStudent = ref(false)
 
 function genderText(gender) {
   if (gender === 'MALE') return '男'
@@ -100,7 +114,31 @@ onMounted(async () => {
   } finally {
     judgeLoading.value = false
   }
+
+  // 判断当前用户是否为学生
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+  isStudent.value = userInfo.userType === 'STUDENT'
 })
+
+// 私聊会话
+async function startChat() {
+  chatLoading.value = true
+  chatError.value = ''
+  try {
+    const teacherUserId = Number(route.query.userId)
+    const res = await api.post('/chat/sessions', teacherUserId)
+    if (res.status === 200 && res.data && res.data.sessionId) {
+      // 跳转到会话页面，假设路由为 /chat/session?sessionId=xxx
+      router.push({ path: '/chat/session', query: { sessionId: res.data.sessionId } })
+    } else {
+      chatError.value = '进入会话失败'
+    }
+  } catch (e) {
+    chatError.value = '进入会话失败'
+  } finally {
+    chatLoading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -181,5 +219,32 @@ h2 {
   color: #aaa;
   text-align: center;
   margin: 1rem 0;
+}
+.chat-btn-wrap {
+  margin: 2rem 0 1rem 0;
+  text-align: center;
+}
+.chat-btn {
+  padding: 0.7rem 2.2rem;
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.chat-btn:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+}
+.chat-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+}
+.chat-error {
+  color: #ff4d4f;
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
 }
 </style>
