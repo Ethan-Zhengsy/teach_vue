@@ -10,6 +10,7 @@ import TeacherInfoView from '../views/TeacherInfoView.vue'
 import TeacherHomeView from '../views/TeacherHomeView.vue'
 import StudentHomeView from '../views/StudentHomeView.vue'
 import TeacherDetailView from '../views/TeacherDetailView.vue'
+import StudentDetailView from '../views/StudentDetailView.vue'
 
 
 const routes = [
@@ -78,6 +79,12 @@ const routes = [
     path: '/teacher/detail',
     name: 'teacherDetail',
     component: TeacherDetailView
+  },
+  {
+    // 学生详情页面路由
+    path: '/student/detail',
+    name: 'studentDetail',
+    component: StudentDetailView
   }
 ]
 

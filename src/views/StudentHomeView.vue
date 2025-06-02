@@ -138,8 +138,8 @@ async function fetchTeachers() {
 
 // 跳转到教师详情页
 function goToTeacherDetail(userId) {
-  // 假设教师详情页路由为 /teacher/info?userId=xxx
-  router.push({ path: '/teacher/info', query: { userId } })
+  // 假设教师详情页路由为 /teacher/detail?userId=xxx
+  router.push({ path: '/teacher/detail', query: { userId } })
 }
 </script>
 
