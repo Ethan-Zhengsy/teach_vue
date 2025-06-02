@@ -132,8 +132,14 @@ const handleSubmit = async () => {
         userType: res.data.userType
       }))
       alert('登录成功！')
-      // 跳转到首页或其他页面
-      router.push('/home')
+      // 判断用户类型跳转
+      if (res.data.userType === 'TEACHER') {
+        router.push('/teacher/home')
+      } else if (res.data.userType === 'STUDENT') {
+        router.push('/student/home') // 你可以自定义学生主页路由
+      } else {
+        router.push('/home')
+      }
     } else {
       validationErrors.general = '登录失败，请重试'
     }

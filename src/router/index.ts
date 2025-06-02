@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import HomeView from '../views/HomeView.vue'
 import StudentPageView from '../views/StudentPageView.vue'
 import TeacherPageView from '../views/TeacherPageView.vue'
 import AccountEditView from '../views/AccountEditView.vue'
 import AccountInfoView from '../views/AccountInfoView.vue'
 import StudentInfoView from '../views/StudentInfoView.vue'
 import TeacherInfoView from '../views/TeacherInfoView.vue'
+import TeacherHomeView from '../views/TeacherHomeView.vue'
 
 
 const routes = [
@@ -22,12 +22,6 @@ const routes = [
     path: '/register',
     name: 'register',
     component: RegisterView
-  },
-  {
-    // 首页路由（未完成）
-    path: '/home',
-    name: 'home',
-    component: HomeView
   },
   {
     // 教师信息完善页面路由
@@ -48,19 +42,28 @@ const routes = [
     component: AccountEditView
   },
   {
+    // 账户信息查看页面路由
     path: '/account/info',
     name: 'accountInfo',
     component: AccountInfoView
   },
   {
+    // 学生信息查看页面路由
     path: '/student/info',
     name: 'studentInfo',
     component: StudentInfoView
   },
   {
+    // 教师信息查看页面路由
     path: '/teacher/info',
     name: 'teacherInfo',
     component: TeacherInfoView
+  },
+  {
+    // 教师主页路由
+    path: '/teacher/home',
+    name: 'teacherHome',
+    component: TeacherHomeView
   }
 ]
 
