@@ -14,6 +14,14 @@
       <div v-else-if="error" class="error-msg">{{ error }}</div>
       <div v-else>
         <div
+          v-if="hasMore"
+          class="load-more"
+          @click="loadMore"
+          :disabled="loadingMore"
+        >
+          {{ loadingMore ? '加载中...' : '加载更多历史消息' }}
+        </div>
+        <div
           v-for="(msg, idx) in messages"
           :key="msg.messageId || idx"
           :class="['chat-msg', msg.pos === 'right' ? 'mine' : 'other']"
@@ -24,11 +32,9 @@
             <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
           </div>
         </div>
-        <div v-if="hasMore" class="load-more" @click="loadMore" :disabled="loadingMore">
-          {{ loadingMore ? '加载中...' : '加载更多历史消息' }}
-        </div>
       </div>
     </div>
+    <!-- 输入框和发送按钮 -->
     <div class="chat-input-bar">
       <input
         v-model="inputMsg"
@@ -36,6 +42,7 @@
         :disabled="sending"
         placeholder="请输入消息，回车发送"
         class="chat-input"
+        maxlength="1000"
       />
       <button class="send-btn" @click="sendMsg" :disabled="sending || !inputMsg.trim()">
         {{ sending ? '发送中...' : '发送' }}
@@ -54,6 +61,7 @@ const props = defineProps({
 })
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+const userId = userInfo.userId
 const userType = userInfo.userType
 
 const messages = ref([])
@@ -126,9 +134,26 @@ async function loadMore() {
 async function sendMsg() {
   if (!inputMsg.value.trim()) return
   sending.value = true
+  error.value = ''
   try {
+    // 获取对方ID
+    let receiverId = null
+    if (props.session) {
+      if (userType === 'TEACHER') {
+        receiverId = props.session.studentUserId
+      } else if (userType === 'STUDENT') {
+        receiverId = props.session.teacherUserId
+      }
+    }
+    if (!receiverId) {
+      error.value = '无法获取对方ID'
+      sending.value = false
+      return
+    }
     const res = await api.post('/chat/messages', {
       sessionId: props.sessionId,
+      senderId: userId,
+      receiverId,
       content: inputMsg.value.trim()
     })
     if (res.status === 200) {
