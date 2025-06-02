@@ -11,6 +11,7 @@ import TeacherHomeView from '../views/TeacherHomeView.vue'
 import StudentHomeView from '../views/StudentHomeView.vue'
 import TeacherDetailView from '../views/TeacherDetailView.vue'
 import StudentDetailView from '../views/StudentDetailView.vue'
+import ChatSessionView from '../views/ChatSessionView.vue'
 
 
 const routes = [
@@ -85,6 +86,12 @@ const routes = [
     path: '/student/detail',
     name: 'studentDetail',
     component: StudentDetailView
+  },
+  {
+    // 聊天页面路由
+    path: '/chat/session',
+    name: 'chatSession',
+    component: ChatSessionView
   }
 ]
 
