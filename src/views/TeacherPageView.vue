@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import api from '../utils/api'
 // Vue组件导出
 export default {
   // 数据属性定义
@@ -155,19 +156,10 @@ export default {
       try {
         // ★★★★★ 这里是唯一需要修改的地方 ★★★★★
         // 将YOUR_APIFOX_URL替换为你的真实Apifox接口URL
-        const API_URL = "/api/user/update/teacher";
+        const API_URL = "/user/update/teacher";
         
         // 使用Fetch API发送POST请求
-        const response = await fetch(API_URL, {
-          method: 'POST', // HTTP方法为POST
-          headers: {
-            'Content-Type': 'application/json', // JSON格式内容
-            // ★★★ 如果需要Authorization认证，取消下面行的注释并添加你的token ★★★
-            // 'Authorization': 'Bearer your_token_here'
-          },
-          // 将表单数据转换为JSON字符串
-          body: JSON.stringify(this.formData)
-        });
+        const response = await api.post(API_URL, this.formData);
         
         // 检查响应状态码
         if (!response.ok) {

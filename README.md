@@ -1,7 +1,5 @@
 # teach_vue
 
-
-
 > [!IMPORTANT]
 >
 > 项目名称 teach_vue
@@ -9,19 +7,19 @@
 ## 如何查看页面？
 
 在localhost:8080后加上
-> **/register：** 可访问注册页面  
-> **/home：** 可访问主页（未完成）  
-> **/teacher：** 可访问教师信息完善页面  
-> **/student：** 可访问学生信息完善页面  
-> **/account/edit：** 可访问账户信息编辑页面  
-具体可查看路由文件 teach_vue\src\router\index.ts
+
+> **/register：** 可访问注册页面
+> **/home：** 可访问主页（未完成）
+> **/teacher：** 可访问教师信息完善页面
+> **/student：** 可访问学生信息完善页面
+> **/account/edit：** 可访问账户信息编辑页面
+> 具体可查看路由文件 teach_vue\src\router\index.ts
 
 ## 克隆 & 运行项目
 
-> [!TIP] 
+> [!TIP]
 >
 > 也可以参考以下步骤在本地运行项目
-
 
 #### 1. 克隆项目到本地
 
@@ -29,6 +27,7 @@
 git clone https://github.com/Ethan-Zhengsy/teach_vue.git
 cd teach_vue
 ```
+
 #### 2. 安装依赖
 
 ```
@@ -53,14 +52,14 @@ npm run dev
 
 ![npm_run_serve_show](./image/npm_run_serve_show.png)
 
-#### 4. 访问网页 
+#### 4. 访问网页
 
 ![vue_run_show](./image/vue_run_show.png)
 
 > [!CAUTION]
 >
 > 这里显示的两个网址都是vue运行得到的网页页面，第一个网址是只能在本地访问，第二个网址是允许让同一片局域网下的其他设备访问。
-> 
+>
 > 一般情况下，直接 `Ctrl + 左键单击`即可打开页面。如果打不开，可以尝试把网址复制到浏览器地址栏中。
 
 浏览器显示结果可能如下：
@@ -68,44 +67,41 @@ npm run dev
 ![webpage_show](./image/webpage_show.png)
 
 ### Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
 
 #### 安装环境
 
 1. 下载nodejs1.1.12并安装
 
-    setup.exe：https://github.com/coreybutler/nvm-windows/releases/download/1.1.12/nvm-setup.exe
-
+   setup.exe：https://github.com/coreybutler/nvm-windows/releases/download/1.1.12/nvm-setup.exe
 2. 在命令提示符中端中输入命令
 
-    ```shell
-    nvm install 20
-    ```
+   ```shell
+   nvm install 20
+   ```
 
-    ```shell
-    nvm use 20.19.1
-    ```
+   ```shell
+   nvm use 20.19.1
+   ```
 
-    检查是否安装成功
+   检查是否安装成功
 
-    ```shell
-    node -v
-    npm -v
-    ```
-
+   ```shell
+   node -v
+   npm -v
+   ```
 3. 安装`vue`框架
 
-    ```shell
-    npm install -g @vue/cli
-    ```
+   ```shell
+   npm install -g @vue/cli
+   ```
 
-    验证
+   验证
 
-    ```shell
-    vue -V
-    ```
+   ```shell
+   vue -V
+   ```
 
 参考：
 
@@ -133,12 +129,9 @@ vue 3.x
 
 [vue create创建项目手动配置步骤_class-style component syntax-CSDN博客](https://blog.csdn.net/weixin_45032067/article/details/126356391)
 
-
 启动项目时
 
 ```
 cd teach_vue
 npm run serve
 ```
-
-
