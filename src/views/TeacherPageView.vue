@@ -166,7 +166,7 @@ export default {
         console.log("保存成功:", result);
         
         // 根据后端返回状态码处理
-        if (result.code === 200) {
+        if (response.status === 200) {
           alert("教师数据保存成功！");
           // 可以在这里添加成功后跳转或清空表单的逻辑
           // this.resetForm();
@@ -214,7 +214,7 @@ export default {
     async fetchUpdatedData() {
       try {
         // 悄悄地在后台执行GET请求
-        const getResponse = await api.get('/api/match/save');
+        const getResponse = await api.get('/match/save');
         console.log("后台数据刷新完成", getResponse.data);
       } catch (getError) {
         // 只记录错误，不提示用户
