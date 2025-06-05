@@ -166,7 +166,7 @@ export default {
         console.log("保存成功:", result);
         
         // 根据后端返回状态码处理
-        if (result.status === 200) {
+        if (response.status === 200) {
           alert("教师数据保存成功！");
           // 可以在这里添加成功后跳转或清空表单的逻辑
           // this.resetForm();
