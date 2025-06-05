@@ -114,11 +114,13 @@
 </template>
 
 <script>
+import api from "../utils/api"
+
 export default {
   // 数据属性定义
   data() {
     return {
-      // 表单数据结构 - 与您提供的JSON对应
+      // 表单数据结构 - 与提供的JSON对应
       formData: {
         name: "",        // 姓名
         gender: "",      // 性别
@@ -191,29 +193,8 @@ export default {
         this.showData();
         if (!this.showPreview) return;
         
-        // ★★★★★ 这里是唯一需要修改的地方 ★★★★★
-        // 将YOUR_API_URL替换为你的真实接口URL
-        const API_URL = "/api/user/update/student";
+        const response = await api.post('/user/update/student',this.formData)
         
-        // 使用Fetch API发送POST请求
-        const response = await fetch(API_URL, {
-          method: 'POST', // HTTP方法为POST
-          headers: {
-            'Content-Type': 'application/json', // JSON格式内容
-            // ★★★ 如果需要Authorization认证，取消下面行的注释并添加你的token ★★★
-            // 'Authorization': 'Bearer your_token_here'
-          },
-          // 将表单数据转换为JSON字符串
-          body: JSON.stringify(this.formData)
-        });
-        
-        // 检查响应状态码
-        if (!response.ok) {
-          throw new Error(`请求失败: ${response.status}`);
-        }
-        
-        // 解析JSON响应
-        const result = await response.json();
         console.log("保存成功:", result);
         alert("学生数据保存成功！");
         
@@ -223,8 +204,29 @@ export default {
       } catch (error) {
         // 错误处理
         console.error("保存失败:", error);
-        // 显示错误提示
-        alert(`保存失败: ${error.message}`);
+        // 显示更详细的错误提示
+        let errorMessage = "保存失败，请重试";
+
+        if(error.response){
+          // 后端返回的错误响应
+          const {status, data } = error.response;
+          if(status === 401){
+            errorMessage = "身份验证已过期，请重新登录";
+            // 可以在这里添加跳转到登录页的逻辑
+            // this.$router.push('/login');
+          }else if(data && data.message){
+            errorMessage = data.message;
+          }else{
+            errorMessage =`服务器错误 (状态码: ${status})`;
+          }
+        }else if(error.request){
+          // 请求已发送，但无响应
+          errorMessage = "无法连接到服务器，请检查网络连接";
+        }else{
+          // 请求未发送
+          errorMessage = "请求发送失败";
+        }
+        alert(errorMessage);
       }
     }
   }
