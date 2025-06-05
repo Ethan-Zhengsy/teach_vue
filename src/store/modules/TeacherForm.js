@@ -1,21 +1,19 @@
 import { defineStore } from 'pinia'
 
-export const useTeacherStore = defineStore('TeacherForm', {
+// 修改 store 模块
+export const useTeacherStore = defineStore('Teacher', {
   state: () => ({
-    subjects: ['数学', '物理'],
     price: 200,
-    introduction: '10年教学经验，擅长高考冲刺辅导'
+    profile: null, // 包含所有表单字段的对象
+    //...
   }),
   actions: {
     async loadProfile() {
-      // 模拟数据加载
-      this.subjects = ['数学', '物理']
-      this.price = 200
-      this.introduction = '资深教师，擅长高考冲刺辅导'
-      // 模拟API调用
-      return new Promise(resolve => {
-        setTimeout(resolve, 500)
-      })
+      // 从接口加载数据
+      this.profile = await api.post('/user/update/teacher')
+    },
+    async saveProfile() {
+      await api.updateProfile(this.profile)
     }
   }
 })
