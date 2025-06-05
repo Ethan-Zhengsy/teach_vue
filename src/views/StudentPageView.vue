@@ -236,7 +236,7 @@ export default {
     async fetchUpdatedData() {
       try {
         // 悄悄地在后台执行GET请求
-        const getResponse = await api.get('/api/match/save');
+        const getResponse = await api.get('/match/save');
         console.log("后台数据刷新完成", getResponse.data);
       } catch (getError) {
         // 只记录错误，不提示用户
