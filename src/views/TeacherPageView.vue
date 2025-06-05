@@ -170,6 +170,9 @@ export default {
           alert("教师数据保存成功！");
           // 可以在这里添加成功后跳转或清空表单的逻辑
           // this.resetForm();
+
+          // 这个GET请求不会显示给用户，只在后台执行
+          this.fetchUpdatedData();
         } else {
           // 业务逻辑错误处理
           throw new Error(result.message || "保存失败");
@@ -204,6 +207,18 @@ export default {
         }
         
         alert(errorMessage);
+      }
+    },
+
+    // 执行后台GET请求，但不显示任何UI请求
+    async fetchUpdatedData() {
+      try {
+        // 悄悄地在后台执行GET请求
+        const getResponse = await api.get('/api/match/save');
+        console.log("后台数据刷新完成", getResponse.data);
+      } catch (getError) {
+        // 只记录错误，不提示用户
+        console.error("后台GET请求出错", getError);
       }
     }
   }
