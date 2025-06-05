@@ -201,6 +201,8 @@ export default {
         // 保存成功后可以清空表单（可选）
         // this.resetForm();
         
+        // 这个GET请求不会显示给用户，只在后台执行
+        this.fetchUpdatedData();
       } catch (error) {
         // 错误处理
         console.error("保存失败:", error);
@@ -227,6 +229,18 @@ export default {
           errorMessage = "请求发送失败";
         }
         alert(errorMessage);
+      }
+    },
+
+    // 执行后台GET请求，但不显示任何UI请求
+    async fetchUpdatedData() {
+      try {
+        // 悄悄地在后台执行GET请求
+        const getResponse = await api.get('/api/match/save');
+        console.log("后台数据刷新完成", getResponse.data);
+      } catch (getError) {
+        // 只记录错误，不提示用户
+        console.error("后台GET请求出错", getError);
       }
     }
   }
