@@ -89,6 +89,13 @@ async function fetchUnreadCount() {
 
 function selectSession(sessionId) {
   activeSessionId.value = sessionId
+  // 立即将该会话的未读数设为0
+  const session = sessions.value.find(s => s.sessionId === sessionId)
+  if (session && session.unreadMsgCount > 0) {
+    // 先减去本会话的未读数
+    unreadCount.value = Math.max(0, unreadCount.value - session.unreadMsgCount)
+    session.unreadMsgCount = 0
+  }
 }
 
 function getSessionName(session) {
