@@ -1,13 +1,13 @@
 <template>
   <div class="student-info-container">
     <!-- 使用 src\components\StudentInfoView.vue 组件 -->
-    <StudentInfoView />
+    <StudentInfoForm />
   </div>
 </template>
 
 <script setup>
 // 使用 src\components\StudentInfoForm.vue 组件
-import StudentInfoView from '../components/StudentInfoForm.vue'
+import StudentInfoForm from '../components/StudentInfoForm.vue'
 </script>
 
 <style scoped>
