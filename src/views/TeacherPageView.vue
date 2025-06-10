@@ -154,31 +154,71 @@ export default {
     // 保存数据到Apifox接口
     async saveData() {
       try {
-        // ★★★★★ 这里是唯一需要修改的地方 ★★★★★
-        // 将YOUR_APIFOX_URL替换为你的真实Apifox接口URL
-        const API_URL = "/user/update/teacher";
+        // 触发基本验证
+        this.showData();
+        if (!this.showPreview) return;
         
-        // 使用Fetch API发送POST请求
-        const response = await api.post(API_URL, this.formData);
+        // 使用api实例发送请求
+        const response = await api.post('/user/update/teacher', this.formData);
         
-        // 检查响应状态码
-        if (!response.ok) {
-          throw new Error(`请求失败: ${response.status}`);
+        // 处理响应数据
+        const result = response.data;
+        console.log("保存成功:", result);
+        
+        // 根据后端返回状态码处理
+        if (response.status === 200) {
+          alert("教师数据保存成功！");
+          // 可以在这里添加成功后跳转或清空表单的逻辑
+          // this.resetForm();
+
+          // 这个GET请求不会显示给用户，只在后台执行
+          this.fetchUpdatedData();
+        } else {
+          // 业务逻辑错误处理
+          throw new Error(result.message || "保存失败");
         }
         
-        // 解析JSON响应
-        const result = await response.json();
-        console.log("保存成功:", result);
-        alert("数据保存成功！");
-        
-        // 保存成功后可以清空表单（可选）
-        // this.formData = {...this.defaultFormData};
-        
       } catch (error) {
-        // 错误处理
         console.error("保存失败:", error);
-        // 显示错误提示
-        alert(`保存失败: ${error.message}`);
+        
+        // 友好的错误提示
+        let errorMessage = "保存失败，请重试";
+        
+        if (error.response) {
+          // API 响应错误
+          const status = error.response.status;
+          const errorData = error.response.data;
+          
+          if (status === 401) {
+            errorMessage = "身份验证已过期，请重新登录";
+            // 可以在这里添加跳转登录页的逻辑
+            // this.$router.push('/login');
+          } else if (errorData && errorData.message) {
+            errorMessage = errorData.message;
+          } else {
+            errorMessage = `服务器错误 (状态码: ${status})`;
+          }
+        } else if (error.request) {
+          // 请求已发出但没有收到响应
+          errorMessage = "服务器响应超时，请稍后重试";
+        } else {
+          // 请求未能发出
+          errorMessage = "网络错误，请检查网络连接";
+        }
+        
+        alert(errorMessage);
+      }
+    },
+
+    // 执行后台GET请求，但不显示任何UI请求
+    async fetchUpdatedData() {
+      try {
+        // 悄悄地在后台执行GET请求
+        const getResponse = await api.get('/match/save');
+        console.log("后台数据刷新完成", getResponse.data);
+      } catch (getError) {
+        // 只记录错误，不提示用户
+        console.error("后台GET请求出错", getError);
       }
     }
   }
