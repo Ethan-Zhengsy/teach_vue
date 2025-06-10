@@ -12,6 +12,8 @@ import StudentHomeView from '../views/StudentHomeView.vue'
 import TeacherDetailView from '../views/TeacherDetailView.vue'
 import StudentDetailView from '../views/StudentDetailView.vue'
 import ChatSessionView from '../views/ChatSessionView.vue'
+import StudentJudgesView from '../views/StudentJudgesView.vue'
+import TeacherJudgesView from '../views/TeacherJudgeView.vue'
 
 
 const routes = [
@@ -29,13 +31,13 @@ const routes = [
   },
   {
     // 教师信息完善页面路由
-    path: '/teacher',
+    path: '/teacher/complete',
     name: 'teacher',
     component: TeacherPageView
   },
   {
     // 学生信息完善页面路由
-    path: '/student',
+    path: '/student/complete',
     name: 'student',
     component: StudentPageView
   },
@@ -92,6 +94,18 @@ const routes = [
     path: '/chat/session',
     name: 'chatSession',
     component: ChatSessionView
+  },
+  {
+    // 学生自身评价页面路由
+    path: '/student/judge',
+    name: 'studentJudge',
+    component: StudentJudgesView
+  },
+  {
+    // 教师评价页面路由
+    path: '/teacher/judge',
+    name: 'teacherJudge',
+    component: TeacherJudgesView
   }
 ]
 

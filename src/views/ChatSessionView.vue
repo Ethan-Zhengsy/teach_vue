@@ -51,6 +51,7 @@ const activeSession = computed(() =>
 
 let timer = null
 
+// 页面加载时获取会话列表和未读消息数
 onMounted(() => {
   fetchSessions()
   fetchUnreadCount()
@@ -61,10 +62,12 @@ onMounted(() => {
   }, 3000)
 })
 
+// 页面卸载时清除定时器
 onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 
+// 获取会话列表
 async function fetchSessions() {
   loading.value = true
   error.value = ''
@@ -87,6 +90,7 @@ async function fetchSessions() {
   }
 }
 
+// 获取未读消息数
 async function fetchUnreadCount() {
   try {
     const res = await api.get('/chat/UnreadMsgCount')
@@ -98,6 +102,7 @@ async function fetchUnreadCount() {
   }
 }
 
+// 选择会话
 function selectSession(sessionId) {
   activeSessionId.value = sessionId
   // 立即将该会话的未读数设为0
@@ -109,6 +114,7 @@ function selectSession(sessionId) {
   }
 }
 
+// 获取会话名称
 function getSessionName(session) {
   // 当前用户是老师还是学生可根据本地 userInfo 判断
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
@@ -120,6 +126,7 @@ function getSessionName(session) {
   return session.teacherName || session.studentName || '用户'
 }
 
+// 格式化时间字符串
 function formatTime(timeStr) {
   if (!timeStr) return ''
   // 简单格式化
