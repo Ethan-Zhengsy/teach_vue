@@ -70,7 +70,7 @@ async function fetchSessions() {
   error.value = ''
   try {
     // 这里如需分页可加参数
-    const res = await api.get('/chat/sessions', { data: { page: 0, size: 10 } })
+    const res = await api.get('/chat/sessions', { params: { page: 0, size: 10 } })
     if (res.status === 200 && res.data && Array.isArray(res.data.content)) {
       sessions.value = res.data.content
       // 默认选中第一个会话
