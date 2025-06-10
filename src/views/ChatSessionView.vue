@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import api from '../utils/api'
 import ChatWindow from '../components/ChatWindow.vue'
 
@@ -49,9 +49,20 @@ const activeSession = computed(() =>
   sessions.value.find(s => s.sessionId === activeSessionId.value)
 )
 
+let timer = null
+
 onMounted(() => {
   fetchSessions()
   fetchUnreadCount()
+  // 每3秒自动刷新会话列表和未读数
+  timer = setInterval(() => {
+    fetchSessions()
+    fetchUnreadCount()
+  }, 3000)
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 
 async function fetchSessions() {

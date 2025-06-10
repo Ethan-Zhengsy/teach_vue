@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import api from '../utils/api'
 
 const props = defineProps({
@@ -77,6 +77,7 @@ const size = ref(20)
 const hasMore = ref(false)
 const loadingMore = ref(false)
 let totalPages = 1
+let timer = null
 
 // 加载消息历史（分页，倒序追加）
 async function fetchMessages(init = true) {
@@ -187,6 +188,13 @@ watch(() => props.sessionId, () => {
 
 onMounted(() => {
   fetchMessages(true)
+  timer = setInterval(() => {
+    fetchMessages(true)
+  }, 3000) // 每3秒自动拉取一次
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 </script>
 
