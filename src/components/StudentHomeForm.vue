@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- 聊天列表按钮（右上角） -->
+    <button class="chat-list-btn" @click="goToChatSession">
+      会话列表
+    </button>
     <!-- h2：学生主页 -->
     <h2>学生主页</h2>
     <p>欢迎，{{ username }}！这是您的学生专属主页。</p>
@@ -142,6 +146,11 @@ function goToTeacherDetail(userId) {
   // 假设教师详情页路由为 /teacher/detail?userId=xxx
   router.push({ path: '/teacher/detail', query: { userId } })
 }
+
+// 跳转到聊天会话页
+function goToChatSession() {
+  router.push({ path: '/chat/session' })
+}
 </script>
 
 <style scoped>
@@ -255,5 +264,24 @@ h2 {
   color: #aaa;
   text-align: center;
   margin: 1.5rem 0;
+}
+/* 聊天按钮样式 */
+.chat-list-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.chat-list-btn:hover {
+  background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
 }
 </style>
