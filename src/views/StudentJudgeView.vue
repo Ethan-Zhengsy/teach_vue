@@ -1,15 +1,15 @@
 <template>
-  <div class="teacher-judge-container">
-    <TeacherJudgeForm />
+  <div class="student-judge-container">
+    <StudentJudgeForm />
   </div>
 </template>
 
 <script setup>
-import TeacherJudgeForm from '../components/TeacherJudgeForm.vue'
+import StudentJudgeForm from '../components/StudentJudgeForm.vue'
 </script>
 
 <style scoped>
-.teacher-judge-container {
+.student-judge-container {
   background: white;
   padding: 2.5rem 2rem;
   border-radius: 16px;

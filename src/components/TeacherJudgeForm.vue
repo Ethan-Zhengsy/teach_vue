@@ -1,5 +1,5 @@
 <template>
-  <div class="student-judge-container">
+  <div>
     <h2>收到的评价</h2>
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="error" class="error-msg">{{ error }}</div>
@@ -25,9 +25,10 @@ onMounted(async () => {
   loading.value = true
   error.value = ''
   try {
-    // 获取当前学生ID
+    // 获取当前教师ID
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
     const userId = -1
+    // 请求评价接口，id为当前教师ID
     const res = await api.get('/interaction/queryjudge', { params: { id: userId } })
     if (res.status === 200 && Array.isArray(res.data)) {
       judges.value = res.data.filter(j => j && j.content)
@@ -45,16 +46,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.student-judge-container {
-  background: white;
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
-  width: 100%;
-  max-width: 500px;
-  margin: 60px auto 0 auto;
-  text-align: center;
-}
 h2 {
   font-size: 2.2rem;
   font-weight: 900;

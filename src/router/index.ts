@@ -12,7 +12,7 @@ import StudentHomeView from '../views/StudentHomeView.vue'
 import TeacherDetailView from '../views/TeacherDetailView.vue'
 import StudentDetailView from '../views/StudentDetailView.vue'
 import ChatSessionView from '../views/ChatSessionView.vue'
-import StudentJudgesView from '../views/StudentJudgesView.vue'
+import StudentJudgesView from '../views/StudentJudgeView.vue'
 import TeacherJudgesView from '../views/TeacherJudgeView.vue'
 
 
