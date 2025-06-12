@@ -14,6 +14,7 @@ import StudentDetailView from '../views/StudentDetailView.vue'
 import ChatSessionView from '../views/ChatSessionView.vue'
 import StudentJudgesView from '../views/StudentJudgeView.vue'
 import TeacherJudgesView from '../views/TeacherJudgeView.vue'
+import UserProfileView from '../views/UserProfileView.vue'
 
 
 const routes = [
@@ -106,6 +107,12 @@ const routes = [
     path: '/teacher/judge',
     name: 'teacherJudge',
     component: TeacherJudgesView
+  },
+  {
+    //
+    path: "/user/profile",
+    name: "userProfile",
+    component: UserProfileView
   }
 ]
 

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- 右上角个人中心按钮 -->
+    <button class="profile-btn" @click="goToUserProfile">
+      个人中心
+    </button>
     <!-- 聊天列表按钮（右上角） -->
     <button class="chat-list-btn" @click="goToChatSession">
       会话列表
@@ -142,9 +146,17 @@ function goToStudentDetail(userId) {
 function goToChatSession() {
   router.push({ path: '/chat/session' })
 }
+
+// 跳转到个人中心
+function goToUserProfile() {
+  router.push({ path: '/user/profile' })
+}
 </script>
 
-<style scoped>  
+<style scoped>
+.teacher-home-container {
+  position: relative;
+}
 h2 {
   font-size: 2.2rem;
   font-weight: 900;
@@ -254,6 +266,25 @@ h2 {
   color: #aaa;
   text-align: center;
   margin: 1.5rem 0;
+}
+/* 右上角个人中心按钮样式 */
+.profile-btn {
+  position: absolute;
+  top: 18px;
+  right: 130px;
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.profile-btn:hover {
+  background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
 }
 /* 聊天按钮样式 */
 .chat-list-btn {
