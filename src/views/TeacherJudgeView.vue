@@ -27,7 +27,7 @@ onMounted(async () => {
   try {
     // 获取当前教师ID
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
-    const userId = userInfo.userId
+    const userId = -1
     // 请求评价接口，id为当前教师ID
     const res = await api.get('/interaction/queryjudge', { params: { id: userId } })
     if (res.status === 200 && Array.isArray(res.data)) {

@@ -31,6 +31,22 @@
     <!-- judge-section: 评价展示区域 -->
     <div class="judge-section">
       <h3>评价</h3>
+      <!-- 用户评价框，显示在他人评价上方 -->
+      <div class="my-judge-box">
+        <textarea
+          v-model="myJudgeContent"
+          class="my-judge-input"
+          placeholder="请输入您对该学生的评价"
+          maxlength="300"
+          rows="3"
+        ></textarea>
+        <button class="my-judge-btn" @click="submitJudge" :disabled="judgeLoading || !myJudgeContent.trim()">
+          {{ judgeLoading ? '提交中...' : '提交评价' }}
+        </button>
+        <span v-if="myJudgeError" class="my-judge-error">{{ myJudgeError }}</span>
+        <span v-if="myJudgeSuccess" class="my-judge-success">评价提交成功！</span>
+      </div>
+      <!-- 他人评价列表 -->
       <div v-if="judgeLoading" class="loading">评价加载中...</div>
       <div v-else-if="judgeError" class="error-msg">{{ judgeError }}</div>
       <ul v-else-if="judges.length > 0" class="judge-list">
@@ -60,6 +76,9 @@ const error = ref('')
 const judges = ref([])
 const judgeLoading = ref(true)
 const judgeError = ref('')
+const myJudgeContent = ref('')
+const myJudgeError = ref('')
+const myJudgeSuccess = ref(false)
 
 // 聊天相关
 const chatLoading = ref(false)
@@ -138,6 +157,59 @@ async function startChat() {
     chatLoading.value = false
   }
 }
+
+// 提交评价
+async function submitJudge() {
+  myJudgeError.value = ''
+  myJudgeSuccess.value = false
+  if (!myJudgeContent.value.trim()) {
+    myJudgeError.value = '评价内容不能为空'
+    return
+  }
+  judgeLoading.value = true
+  try {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+    const userId = userInfo.userId
+    const judgeId = Number(route.query.userId) // 学生ID
+    const res = await api.post('/interaction/judge', {
+      userId,
+      judgeId,
+      content: myJudgeContent.value.trim()
+    })
+    if (res.status === 200 && res.data === true) {
+      myJudgeSuccess.value = true
+      myJudgeContent.value = ''
+      await fetchJudges()
+    } else {
+      myJudgeError.value = '提交失败'
+    }
+  } catch (e) {
+    myJudgeError.value = '提交失败'
+  } finally {
+    judgeLoading.value = false
+  }
+}
+
+// 获取评价列表
+async function fetchJudges() {
+  judgeLoading.value = true
+  judgeError.value = ''
+  try {
+    const judgeId = Number(route.query.userId)
+    const res = await api.get('/interaction/queryjudge', { params: { id: judgeId } })
+    if (res.status === 200 && Array.isArray(res.data)) {
+      judges.value = res.data.filter(j => j && j.content)
+    } else {
+      judges.value = []
+      judgeError.value = '未获取到评价'
+    }
+  } catch (e) {
+    judges.value = []
+    judgeError.value = '获取评价失败'
+  } finally {
+    judgeLoading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -199,6 +271,47 @@ h2 {
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+.my-judge-box {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.my-judge-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 48px;
+  background: #f8fafc;
+}
+.my-judge-btn {
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  transition: background 0.2s;
+}
+.my-judge-btn:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+}
+.my-judge-error {
+  color: #ff4d4f;
+  font-size: 0.98rem;
+}
+.my-judge-success {
+  color: #22c55e;
+  font-size: 0.98rem;
 }
 .judge-list {
   list-style: none;
