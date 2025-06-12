@@ -29,7 +29,12 @@
     <!-- 右侧聊天窗口 -->
     <div class="chat-window">
       <div v-if="!activeSessionId" class="empty-chat">请选择左侧会话</div>
-      <ChatWindow v-else :session-id="activeSessionId" :session="activeSession" />
+      <ChatWindow
+        v-else
+        :session-id="activeSessionId"
+        :session="activeSession"
+        :key="activeSessionId"
+      />
     </div>
   </div>
 </template>

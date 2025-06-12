@@ -183,14 +183,14 @@ function scrollToBottom() {
 }
 
 watch(() => props.sessionId, () => {
-  fetchMessages(true)
+  fetchMessages(true) // 切换会话时滚动到底部
 })
 
 onMounted(() => {
   fetchMessages(true)
   timer = setInterval(() => {
-    fetchMessages(true)
-  }, 3000) // 每3秒自动拉取一次
+    fetchMessages(false) // 定时刷新时不滚动
+  }, 3000)
 })
 
 onUnmounted(() => {
