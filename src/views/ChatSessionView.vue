@@ -68,25 +68,27 @@ onUnmounted(() => {
 })
 
 // 获取会话列表
-async function fetchSessions() {
-  loading.value = true
+async function fetchSessions(isInit = false) {
+  if (isInit) loading.value = true
   error.value = ''
   try {
     // 这里如需分页可加参数
     const res = await api.get('/chat/sessions', { params: { page: 0, size: 10 } })
     if (res.status === 200 && res.data && Array.isArray(res.data.content)) {
+      const oldSessionId = activeSessionId.value
       sessions.value = res.data.content
-      // 默认选中第一个会话
-      if (sessions.value.length > 0) {
+      // 只在首次加载或当前会话已不存在时切换
+      if ((!oldSessionId || !sessions.value.some(s => s.sessionId === oldSessionId)) && sessions.value.length > 0) {
         activeSessionId.value = sessions.value[0].sessionId
       }
+      // 否则保持当前 activeSessionId 不变
     } else {
       error.value = '未获取到会话列表'
     }
   } catch (e) {
     error.value = '获取会话列表失败'
   } finally {
-    loading.value = false
+    if (isInit) loading.value = false
   }
 }
 
