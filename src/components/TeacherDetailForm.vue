@@ -125,7 +125,7 @@ onMounted(async () => {
   judgeLoading.value = true
   judgeError.value = ''
   try {
-    const res = await api.get('/interaction/queryjudge')
+    const res = await api.get('/interaction/queryjudge?id=' + route.query.userId)
     if (res.status === 200 && Array.isArray(res.data)) {
       // 只显示当前教师的评价
       const userIdNum = Number(route.query.userId)
@@ -205,7 +205,7 @@ async function fetchJudges() {
   judgeLoading.value = true
   judgeError.value = ''
   try {
-    const res = await api.get('/interaction/queryjudge')
+    const res = await api.get('/interaction/queryjudge?id=' + route.query.userId)
     if (res.status === 200 && Array.isArray(res.data)) {
       const userIdNum = Number(route.query.userId)
       judges.value = res.data.filter(j => j && j.content && j.toId === userIdNum)

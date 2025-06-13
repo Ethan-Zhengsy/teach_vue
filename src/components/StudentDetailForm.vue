@@ -120,7 +120,7 @@ onMounted(async () => {
   judgeLoading.value = true
   judgeError.value = ''
   try {
-    const res = await api.get('/interaction/queryjudge')
+    const res = await api.get('/interaction/queryjudge?id=' + route.query.userId)
     if (res.status === 200 && Array.isArray(res.data)) {
       // 只显示当前学生的评价（如有 toId 字段）
       const userIdNum = Number(route.query.userId)
