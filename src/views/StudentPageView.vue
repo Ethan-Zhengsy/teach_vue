@@ -30,18 +30,9 @@
         <label>年级*：</label>
         <select v-model="formData.grade" required>
           <option value="">请选择年级</option>
-          <option value="一年级">一年级</option>
-          <option value="二年级">二年级</option>
-          <option value="三年级">三年级</option>
-          <option value="四年级">四年级</option>
-          <option value="五年级">五年级</option>
-          <option value="六年级">六年级</option>
-          <option value="初一">初一</option>
-          <option value="初二">初二</option>
-          <option value="初三">初三</option>
-          <option value="高一">高一</option>
-          <option value="高二">高二</option>
-          <option value="高三">高三</option>
+          <option value="小学">小学</option>
+          <option value="初中">初中</option>
+          <option value="高中">高中</option>
         </select>
       </div>
       
