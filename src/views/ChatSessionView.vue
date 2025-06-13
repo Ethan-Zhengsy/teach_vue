@@ -58,7 +58,7 @@ let timer = null
 
 // 页面加载时获取会话列表和未读消息数
 onMounted(() => {
-  fetchSessions()
+  fetchSessions(true)
   fetchUnreadCount()
   // 每3秒自动刷新会话列表和未读数
   timer = setInterval(() => {
