@@ -153,7 +153,7 @@ async function startChat() {
   chatError.value = ''
   try {
     const teacherUserId = Number(route.query.userId)
-    const res = await api.post('/chat/sessions', params = { teacherUserId })
+    const res = await api.post('/chat/sessions?targetUserId=' + teacherUserId)
     if (res.status === 200 && res.data && res.data.sessionId) {
       // 跳转到会话页面，假设路由为 /chat/session?sessionId=xxx
       router.push({ path: '/chat/session', query: { sessionId: res.data.sessionId } })
