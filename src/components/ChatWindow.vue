@@ -103,11 +103,13 @@ async function fetchMessages(init = true) {
       res.data &&
       Array.isArray(res.data.content)
     ) {
-      // 新消息在后面，历史消息在前面
-      if (init) {
-        messages.value = res.data.content.reverse()
+      const newMsgs = res.data.content.reverse()
+      if (init || page.value === 0) {
+        // 首次加载/刷新/切换会话时，直接替换消息数组
+        messages.value = newMsgs
       } else {
-        messages.value = res.data.content.reverse().concat(messages.value)
+        // 加载更多历史消息时，追加到前面
+        messages.value = newMsgs.concat(messages.value)
       }
       totalPages = res.data.totalPages || 1
       hasMore.value = (page.value + 1) < totalPages
