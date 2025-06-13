@@ -227,7 +227,7 @@ const handleSubmit = async () => {
       alert('修改成功！')
       // 更新本地用户信息
       localStorage.setItem('userInfo', JSON.stringify(res.data))
-      router.push('/home')
+      router.push('/user/profile')
     } else {
       errors.general = '修改失败，请重试'
     }
