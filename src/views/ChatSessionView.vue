@@ -29,13 +29,18 @@
     <!-- 右侧聊天窗口 -->
     <div class="chat-window">
       <div v-if="!activeSessionId" class="empty-chat">请选择左侧会话</div>
-      <ChatWindow v-else :session-id="activeSessionId" :session="activeSession" />
+      <ChatWindow
+        v-else
+        :session-id="activeSessionId"
+        :session="activeSession"
+        :key="activeSessionId"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import api from '../utils/api'
 import ChatWindow from '../components/ChatWindow.vue'
 
@@ -49,33 +54,50 @@ const activeSession = computed(() =>
   sessions.value.find(s => s.sessionId === activeSessionId.value)
 )
 
+let timer = null
+
+// 页面加载时获取会话列表和未读消息数
 onMounted(() => {
-  fetchSessions()
+  fetchSessions(true)
   fetchUnreadCount()
+  // 每3秒自动刷新会话列表和未读数
+  timer = setInterval(() => {
+    fetchSessions()
+    fetchUnreadCount()
+  }, 3000)
 })
 
-async function fetchSessions() {
-  loading.value = true
+// 页面卸载时清除定时器
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
+})
+
+// 获取会话列表
+async function fetchSessions(isInit = false) {
+  if (isInit) loading.value = true
   error.value = ''
   try {
     // 这里如需分页可加参数
-    const res = await api.get('/chat/sessions', { data: { page: 0, size: 10 } })
+    const res = await api.get('/chat/sessions', { params: { page: 0, size: 10 } })
     if (res.status === 200 && res.data && Array.isArray(res.data.content)) {
+      const oldSessionId = activeSessionId.value
       sessions.value = res.data.content
-      // 默认选中第一个会话
-      if (sessions.value.length > 0) {
+      // 只在首次加载或当前会话已不存在时切换
+      if ((!oldSessionId || !sessions.value.some(s => s.sessionId === oldSessionId)) && sessions.value.length > 0) {
         activeSessionId.value = sessions.value[0].sessionId
       }
+      // 否则保持当前 activeSessionId 不变
     } else {
       error.value = '未获取到会话列表'
     }
   } catch (e) {
     error.value = '获取会话列表失败'
   } finally {
-    loading.value = false
+    if (isInit) loading.value = false
   }
 }
 
+// 获取未读消息数
 async function fetchUnreadCount() {
   try {
     const res = await api.get('/chat/UnreadMsgCount')
@@ -87,10 +109,19 @@ async function fetchUnreadCount() {
   }
 }
 
+// 选择会话
 function selectSession(sessionId) {
   activeSessionId.value = sessionId
+  // 立即将该会话的未读数设为0
+  const session = sessions.value.find(s => s.sessionId === sessionId)
+  if (session && session.unreadMsgCount > 0) {
+    // 先减去本会话的未读数
+    unreadCount.value = Math.max(0, unreadCount.value - session.unreadMsgCount)
+    session.unreadMsgCount = 0
+  }
 }
 
+// 获取会话名称
 function getSessionName(session) {
   // 当前用户是老师还是学生可根据本地 userInfo 判断
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
@@ -102,6 +133,7 @@ function getSessionName(session) {
   return session.teacherName || session.studentName || '用户'
 }
 
+// 格式化时间字符串
 function formatTime(timeStr) {
   if (!timeStr) return ''
   // 简单格式化

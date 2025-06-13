@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import api from '../utils/api'
 
 const props = defineProps({
@@ -77,6 +77,7 @@ const size = ref(20)
 const hasMore = ref(false)
 const loadingMore = ref(false)
 let totalPages = 1
+let timer = null
 
 // 加载消息历史（分页，倒序追加）
 async function fetchMessages(init = true) {
@@ -102,11 +103,13 @@ async function fetchMessages(init = true) {
       res.data &&
       Array.isArray(res.data.content)
     ) {
-      // 新消息在后面，历史消息在前面
-      if (init) {
-        messages.value = res.data.content.reverse()
+      const newMsgs = res.data.content.reverse()
+      if (init || page.value === 0) {
+        // 首次加载/刷新/切换会话时，直接替换消息数组
+        messages.value = newMsgs
       } else {
-        messages.value = res.data.content.reverse().concat(messages.value)
+        // 加载更多历史消息时，追加到前面
+        messages.value = newMsgs.concat(messages.value)
       }
       totalPages = res.data.totalPages || 1
       hasMore.value = (page.value + 1) < totalPages
@@ -182,11 +185,18 @@ function scrollToBottom() {
 }
 
 watch(() => props.sessionId, () => {
-  fetchMessages(true)
+  fetchMessages(true) // 切换会话时滚动到底部
 })
 
 onMounted(() => {
   fetchMessages(true)
+  timer = setInterval(() => {
+    fetchMessages(false) // 定时刷新时不滚动
+  }, 3000)
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 </script>
 

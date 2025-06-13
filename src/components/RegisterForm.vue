@@ -87,9 +87,9 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../utils/api' // 新增
+import api from '../utils/api'
 
-const router = useRouter() // 新增：用于跳转
+const router = useRouter()
 
 // formData：表单数据
 const formData = reactive({
@@ -105,7 +105,7 @@ const validationErrors = reactive({
   password: '',
   role: '',
   email: '',
-  general: '' // 新增：用于显示通用错误
+  general: ''
 })
 
 // 提交状态

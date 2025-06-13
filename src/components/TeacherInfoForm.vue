@@ -36,6 +36,13 @@
       </ul>
       <div v-else class="empty-tip">暂无文件</div>
     </div>
+
+    <!-- 跳转到修改账户信息 -->
+    <!-- router-link : 路由链接 -->
+    <!-- to : 目标路由 -->
+    <p style="text-align:center;margin-top:5rem;">
+      <router-link to="/teacher/complete">修改教师信息</router-link>
+    </p>
   </div>
 </template>
 
