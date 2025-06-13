@@ -195,7 +195,7 @@ export default {
         
         const response = await api.post('/user/update/student',this.formData)
         
-        console.log("保存成功:", result);
+        console.log("保存成功:", response.data);
         alert("学生数据保存成功！");
         
         // 保存成功后可以清空表单（可选）
