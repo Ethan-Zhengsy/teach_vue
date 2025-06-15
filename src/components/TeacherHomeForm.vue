@@ -7,6 +7,8 @@
     <!-- 聊天列表按钮（右上角） -->
     <button class="chat-list-btn" @click="goToChatSession">
       会话列表
+      <!-- 显示未读消息数量 -->
+      <span v-if="unreadCount > 0" class="unread-count">{{ unreadCount }}</span>
     </button>
     <!-- h2: 教师主页标题 -->
     <h2>教师主页</h2>
@@ -88,6 +90,7 @@ const filter = ref({
 const students = ref([])
 const loading = ref(false)
 const error = ref('')
+const unreadCount = ref(0)
 
 // 获取当前教师ID
 let teacherId = 0
@@ -97,6 +100,9 @@ onMounted(() => {
   username.value = userInfo.username || '教师'
   teacherId = userInfo.userId || 0
   fetchStudents()
+  fetchUnreadCount()
+  // 可选：定时刷新未读数
+  setInterval(fetchUnreadCount, 3000)
 })
 
 // 性别格式化
@@ -133,6 +139,18 @@ async function fetchStudents() {
     error.value = '获取学生列表失败'
   } finally {
     loading.value = false
+  }
+}
+
+// 获取未读消息数量
+async function fetchUnreadCount() {
+  try {
+    const res = await api.get('/chat/UnreadMsgCount')
+    if (res.status === 200 && typeof res.data === 'number') {
+      unreadCount.value = res.data
+    }
+  } catch (e) {
+    // 忽略错误
   }
 }
 
@@ -304,5 +322,16 @@ h2 {
 }
 .chat-list-btn:hover {
   background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+}
+.unread-count {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  background: #ff4d4f;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 </style>

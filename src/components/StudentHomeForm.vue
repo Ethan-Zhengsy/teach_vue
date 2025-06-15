@@ -7,6 +7,8 @@
     <!-- 聊天列表按钮（右上角） -->
     <button class="chat-list-btn" @click="goToChatSession">
       会话列表
+      <!-- 未读消息数量提示 -->
+      <span v-if="unreadCount > 0" class="unread-count">{{ unreadCount }}</span>
     </button>
     <!-- h2：学生主页 -->
     <h2>学生主页</h2>
@@ -160,6 +162,25 @@ function goToChatSession() {
 function goToUserProfile() {
   router.push({ path: '/user/profile' })
 }
+
+// 未读消息数量
+const unreadCount = ref(0)
+
+async function fetchUnreadCount() {
+  try {
+    const res = await api.get('/chat/UnreadMsgCount')
+    if (res.status === 200 && typeof res.data === 'number') {
+      unreadCount.value = res.data
+    }
+  } catch (e) {
+    // 忽略错误
+  }
+}
+
+onMounted(() => {
+  fetchUnreadCount()
+  setInterval(fetchUnreadCount, 3000) // 可选：定时刷新
+})
 </script>
 
 <style scoped>
@@ -314,5 +335,16 @@ h2 {
 }
 .chat-list-btn:hover {
   background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+}
+.unread-count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 </style>
