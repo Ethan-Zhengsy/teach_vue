@@ -13,23 +13,32 @@
       <div v-if="loading" class="loading">消息加载中...</div>
       <div v-else-if="error" class="error-msg">{{ error }}</div>
       <div v-else>
-        <div
-          v-if="hasMore"
-          class="load-more"
-          @click="loadMore"
-          :disabled="loadingMore"
-        >
+        <div v-if="hasMore" class="load-more" @click="loadMore" :disabled="loadingMore">
           {{ loadingMore ? '加载中...' : '加载更多历史消息' }}
         </div>
         <div
           v-for="(msg, idx) in messages"
           :key="msg.messageId || idx"
-          :class="['chat-msg', msg.pos === 'right' ? 'mine' : 'other']"
+          :class="['chat-msg-row', msg.pos === 'right' ? 'mine' : 'other']"
         >
-          <div class="msg-content">{{ msg.content }}</div>
-          <div class="msg-meta">
-            <span>{{ msg.senderName || (msg.pos === 'right' ? '我' : '对方') }}</span>
-            <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
+          <div class="avatar">
+            <img
+              v-if="msg.pos === 'right'"
+              
+              alt="我"
+            />
+            <img
+              v-else
+              
+              alt="对方"
+            />
+          </div>
+          <div :class="['chat-msg', msg.pos === 'right' ? 'mine' : 'other']">
+            <div class="msg-content">{{ msg.content }}</div>
+            <div class="msg-meta">
+              <span class="msg-name">{{ msg.senderName || (msg.pos === 'right' ? '我' : '对方') }}</span>
+              <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -226,30 +235,76 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.7rem;
 }
+
+/* 聊天气泡行 */
+.chat-msg-row {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+}
+.chat-msg-row.mine {
+  flex-direction: row-reverse;
+}
+.chat-msg-row.other {
+  flex-direction: row;
+}
+.avatar {
+  width: 38px;
+  height: 38px;
+  margin: 0 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+}
+.avatar img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e5e7eb;
+}
+
+/* 聊天气泡 */
 .chat-msg {
   max-width: 70%;
-  padding: 0.7rem 1rem;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 1px 6px #e0e7ff33;
-  font-size: 1.05rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 18px;
+  font-size: 1.08rem;
   word-break: break-all;
-  align-self: flex-start;
+  box-shadow: 0 1px 6px #e0e7ff33;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   position: relative;
 }
 .chat-msg.mine {
   background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
   color: #fff;
-  align-self: flex-end;
+  border-bottom-right-radius: 8px;
+  align-items: flex-end;
+}
+.chat-msg.other {
+  background: #fff;
+  color: #22223b;
+  border-bottom-left-radius: 8px;
+  align-items: flex-start;
 }
 .msg-content {
-  margin-bottom: 0.3rem;
+  white-space: pre-wrap;
+  line-height: 1.7;
 }
 .msg-meta {
   font-size: 0.92rem;
-  color: #888;
+  color: #b0b3c6;
   display: flex;
-  justify-content: space-between;
+  gap: 1.2em;
+  margin-top: 0.1em;
+}
+.msg-name {
+  font-weight: 500;
+}
+.msg-time {
+  font-size: 0.9em;
 }
 .load-more {
   text-align: center;
