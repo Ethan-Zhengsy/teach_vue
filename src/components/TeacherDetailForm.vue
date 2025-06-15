@@ -207,8 +207,7 @@ async function fetchJudges() {
   try {
     const res = await api.get('/interaction/queryjudge?id=' + route.query.userId)
     if (res.status === 200 && Array.isArray(res.data)) {
-      const userIdNum = Number(route.query.userId)
-      judges.value = res.data.filter(j => j && j.content && j.toId === userIdNum)
+      judges.value = res.data.filter(j => j && j.content)
     } else {
       judges.value = []
       judgeError.value = '未获取到评价'

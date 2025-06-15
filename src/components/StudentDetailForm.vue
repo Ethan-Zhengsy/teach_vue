@@ -122,10 +122,7 @@ onMounted(async () => {
   try {
     const res = await api.get('/interaction/queryjudge?id=' + route.query.userId)
     if (res.status === 200 && Array.isArray(res.data)) {
-      // 只显示当前学生的评价（如有 toId 字段）
-      const userIdNum = Number(route.query.userId)
-      // 如果后端字段不是 toId，请用实际字段名
-      judges.value = res.data.filter(j => j && j.content && j.toId === userIdNum)
+      judges.value = res.data.filter(j => j && j.content)
     } else {
       judges.value = []
       judgeError.value = '未获取到评价'
