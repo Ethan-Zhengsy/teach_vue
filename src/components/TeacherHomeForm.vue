@@ -325,12 +325,12 @@ h2 {
 }
 .unread-count {
   position: absolute;
-  top: 4px;
-  right: 10px;
+  top: 1px;
+  right: 1px;
   background: #ff4d4f;
   color: #fff;
   border-radius: 10px;
-  padding: 0.1rem 0.6rem;
+  padding: 0.1rem 0.4rem;
   font-size: 0.9rem;
   font-weight: 500;
 }
