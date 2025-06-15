@@ -172,7 +172,8 @@ export default {
           // this.resetForm();
 
           // 这个GET请求不会显示给用户，只在后台执行
-          this.fetchUpdatedData();
+          await this.fetchUpdatedData();
+          await this.fetchAIData();
         } else {
           // 业务逻辑错误处理
           throw new Error(result.message || "保存失败");
@@ -219,6 +220,25 @@ export default {
       } catch (getError) {
         // 只记录错误，不提示用户
         console.error("后台GET请求出错", getError);
+      }
+    },
+
+    async fetchAIData() {
+      try {
+        // 新的GET请求到/api/deepseek/fetch-ai-data
+        const aiResponse = await api.get('/deepseek/fetch-ai-data', {
+          params: {
+            // 可添加必要参数
+            teacherName: this.formData.name,
+            subject: this.formData.subject
+          },
+          silent: true // 静默模式，不显示加载状态或错误提示
+        });
+        
+        console.log("AI数据获取完成", aiResponse.data);
+      } catch (aiError) {
+        // 只记录错误，不提示用户
+        console.error("AI数据获取失败", aiError);
       }
     }
   }
