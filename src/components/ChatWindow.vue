@@ -194,7 +194,7 @@ onMounted(() => {
   fetchMessages(true)
   timer = setInterval(() => {
     fetchMessages(false) // 定时刷新时不滚动
-  }, 3000)
+  }, 1000)
 })
 
 onUnmounted(() => {

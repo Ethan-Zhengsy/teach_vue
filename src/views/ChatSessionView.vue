@@ -64,7 +64,7 @@ onMounted(() => {
   timer = setInterval(() => {
     fetchSessions()
     fetchUnreadCount()
-  }, 3000)
+  }, 1000)
 })
 
 // 页面卸载时清除定时器
