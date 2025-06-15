@@ -163,6 +163,8 @@ async function sendMsg() {
       inputMsg.value = ''
       // 重新加载最新消息
       await fetchMessages(true)
+      // 发送消息后强制滚动到底部
+      scrollToBottom()
     } else {
       error.value = '发送失败'
     }
