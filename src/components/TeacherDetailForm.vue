@@ -135,6 +135,7 @@ onMounted(async () => {
       judges.value = []
       judgeError.value = '未获取到评价'
     }
+    await fetchJudges()
   } catch (e) {
     judges.value = []
     judgeError.value = '获取评价失败'

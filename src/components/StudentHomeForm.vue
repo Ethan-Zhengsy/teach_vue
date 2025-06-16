@@ -100,6 +100,13 @@ onMounted(() => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
   username.value = userInfo.username || '学生'
   studentId = userInfo.userId || 0
+   // 从 localStorage 获取之前的筛选条件
+  const savedFilter = JSON.parse(localStorage.getItem('studentFilter') || '{}')
+
+  // 设置默认筛选条件（如果存在）
+  filter.value.subject = savedFilter.subject || ''
+  filter.value.grade = savedFilter.grade || ''
+
   fetchTeachers()
 })
 
@@ -123,6 +130,8 @@ async function fetchTeachers() {
   loading.value = true
   error.value = ''
   try {
+    localStorage.setItem('studentFilter', JSON.stringify(filter.value))
+
     const params = {
       studentId,
       subject: filter.value.subject || '',
