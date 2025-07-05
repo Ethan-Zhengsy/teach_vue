@@ -144,7 +144,7 @@ function formatTime(timeStr) {
 <style scoped>
 .chat-session-container {
   display: flex;
-  height: 80vh;
+  height: 100vh;
   background: #f4f6fa;
   border-radius: 12px;
   box-shadow: 0 4px 24px #e0e7ff55;
