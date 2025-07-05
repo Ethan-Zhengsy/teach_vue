@@ -192,17 +192,6 @@ h2 {
   font-weight: 900;
   color: #60a5fa;
   margin-bottom: 1.5rem;
-  position: absolute;
-  top: 0px;
-  left: 100px;
-}
-p {
-  font-size: 1.1rem;
-  color: #4b5563;
-  margin-bottom: 2rem;
-  position: absolute;
-  top: 80px;
-  left: 100px;
 }
 .match-teacher-section {
   margin: 2.5rem auto 0 auto;

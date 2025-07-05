@@ -12,17 +12,14 @@ import StudentHomeForm from '../components/StudentHomeForm.vue'
 
 <style scoped>
 .student-home-container {
-  min-height: 100vh;
-  width: 100vw;
-  box-sizing: border-box;
-  background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  /* 去除圆角和阴影，适配全屏 */
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+  width: 100%;
+  max-width: 500px;
+  margin: 60px auto 0 auto;
+  text-align: center;
 }
 /* 其余样式在 StudentHomeForm.vue 中定义 */
 </style>
