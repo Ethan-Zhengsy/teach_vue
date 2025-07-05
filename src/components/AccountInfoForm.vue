@@ -47,15 +47,19 @@ onMounted(async () => {
   try {
     const res = await api.get('/user/info/user')
     if (res.status === 200 && res.data) {
-      // 优先用后端返回的头像，否则用本地缓存
-      const localAvatar = (() => {
-        try {
-          return JSON.parse(localStorage.getItem('userInfo') || '{}').avatar || ''
-        } catch { return '' }
-      })()
-      userInfo.value = {
-        ...res.data,
-        avatar: res.data.avatar || localAvatar
+      userInfo.value = { ...res.data }
+      // 优先请求头像接口
+      const avatarRes = await api.get('/file/listavatar', { params: { userId: userInfo.value.userId } })
+      if (avatarRes.status === 200 && avatarRes.data) {
+        userInfo.value.avatar = avatarRes.data
+      } else {
+        // 如果头像接口没有返回，则用 userInfo 自带的 avatar 字段或本地缓存
+        const localAvatar = (() => {
+          try {
+            return JSON.parse(localStorage.getItem('userInfo') || '{}').avatar || ''
+          } catch { return '' }
+        })()
+        userInfo.value.avatar = userInfo.value.avatar || localAvatar
       }
     } else {
       error.value = '获取信息失败'

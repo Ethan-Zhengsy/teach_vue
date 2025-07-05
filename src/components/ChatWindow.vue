@@ -19,24 +19,18 @@
         <div
           v-for="(msg, idx) in messages"
           :key="msg.messageId || idx"
-          :class="['chat-msg-row', msg.pos === 'right' ? 'mine' : 'other']"
+          :class="['chat-msg-row', msg.senderId === userId ? 'mine' : 'other']"
         >
           <div class="avatar">
             <img
-              v-if="msg.pos === 'right'"
-              
-              alt="我"
-            />
-            <img
-              v-else
-              
-              alt="对方"
+              :src="getMsgAvatar(msg)"
+              :alt="msg.senderName || (msg.senderId === userId ? '我' : '对方')"
             />
           </div>
-          <div :class="['chat-msg', msg.pos === 'right' ? 'mine' : 'other']">
+          <div :class="['chat-msg', msg.senderId === userId ? 'mine' : 'other']">
             <div class="msg-content">{{ msg.content }}</div>
             <div class="msg-meta">
-              <span class="msg-name">{{ msg.senderName || (msg.pos === 'right' ? '我' : '对方') }}</span>
+              <span class="msg-name">{{ msg.senderName || (msg.senderId === userId ? '我' : '对方') }}</span>
               <span class="msg-time">{{ formatTime(msg.createTime) }}</span>
             </div>
           </div>
@@ -63,6 +57,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import api from '../utils/api'
+import defaultAvatar from '../assets/default-avatar.png'
 
 const props = defineProps({
   sessionId: { type: [String, Number], required: true },
@@ -87,6 +82,43 @@ const hasMore = ref(false)
 const loadingMore = ref(false)
 let totalPages = 1
 let timer = null
+
+// 头像缓存
+const avatarMap = ref({})
+
+// 获取头像（有则直接返回，没有则请求后端）
+async function getAvatar(userId) {
+  if (!userId) return ''
+  if (avatarMap.value[userId]) return avatarMap.value[userId]
+  try {
+    const res = await api.get('/file/listavatar', { params: { userId } })
+    if (res.status === 200 && res.data) {
+      avatarMap.value[userId] = res.data
+      return res.data
+    }
+  } catch (e) {}
+  avatarMap.value[userId] = '' // 防止多次请求
+  return ''
+}
+
+// 预加载当前消息列表所有用户头像
+async function preloadAvatars() {
+  const userIds = Array.from(new Set(messages.value.map(m => m.senderId)))
+  userIds.push(userId) // 确保自己的头像也加载
+  await Promise.all(userIds.map(uid => getAvatar(uid)))
+}
+
+// 每次消息变化时预加载头像
+watch(messages, preloadAvatars, { immediate: true })
+
+function getMsgAvatar(msg) {
+  // 自己的消息
+  if (msg.senderId === userId) {
+    return avatarMap.value[userId] || defaultAvatar
+  }
+  // 对方消息
+  return avatarMap.value[msg.senderId] || defaultAvatar
+}
 
 // 加载消息历史（分页，倒序追加）
 async function fetchMessages(init = true) {
