@@ -100,6 +100,13 @@ onMounted(() => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
   username.value = userInfo.username || '学生'
   studentId = userInfo.userId || 0
+   // 从 localStorage 获取之前的筛选条件
+  const savedFilter = JSON.parse(localStorage.getItem('studentFilter') || '{}')
+
+  // 设置默认筛选条件（如果存在）
+  filter.value.subject = savedFilter.subject || ''
+  filter.value.grade = savedFilter.grade || ''
+
   fetchTeachers()
 })
 
@@ -123,13 +130,15 @@ async function fetchTeachers() {
   loading.value = true
   error.value = ''
   try {
+    localStorage.setItem('studentFilter', JSON.stringify(filter.value))
+
     const params = {
       studentId,
       subject: filter.value.subject || '',
       grade: filter.value.grade || '',
       minScore: filter.value.minScore || undefined,
       page: 0,
-      size: 10
+      size: 6
     }
     // 如果没有筛选，subject和grade传空字符串，后端返回推荐
     const res = await api.post('/match/teachers/ai', params)
@@ -201,22 +210,28 @@ p {
   color: #4b5563;
   margin-bottom: 2rem;
   position: absolute;
-  top: 80px;
+  top: 75px;
   left: 100px;
 }
 .match-teacher-section {
+  position: absolute;
+  top: 130px;
+  left: 200px;
+  width: 800px;
+  height: 400px;
   margin: 2.5rem auto 0 auto;
   background: #f8fafc;
   border-radius: 12px;
   padding: 1.5rem 1rem 2rem 1rem;
-  max-width: 480px;
+  /* max-width: 480px; */
   box-shadow: 0 2px 8px #e0e7ff55;
 }
 .match-teacher-section h3 {
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   color: #6366f1;
   margin-bottom: 1.2rem;
+  margin-top: 0.5rem;
   font-weight: 700;
 }
 .filter-form {
@@ -257,8 +272,13 @@ p {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 .teacher-item {
+  width: 27%;
+  height: 80px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 6px #e0e7ff55;

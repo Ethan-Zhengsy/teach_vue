@@ -68,6 +68,11 @@
           </li>
         </ul>
       </div>
+      <div class="pagination">
+        <button class="prev-page" @click="prevPage" :disabled="currentPage === 1">上一页</button>
+        <span class="page-info">第 {{ currentPage }} 页/共 {{ totalPages }} 页</span>
+        <button class="next-page" @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +97,10 @@ const filter = ref({
 const teachers = ref([])
 const loading = ref(false)
 const error = ref('')
+
+// 定义当前页码和总页数
+let currentPage = ref(1); // 当前页码
+let totalPages = ref(1); // 总页数
 
 // 获取当前学生ID
 let studentId = 0
@@ -137,13 +146,14 @@ async function fetchTeachers() {
       subject: filter.value.subject || '',
       grade: filter.value.grade || '',
       minScore: filter.value.minScore || undefined,
-      page: 0,
+      page: currentPage.value - 1,
       size: 6
     }
     // 如果没有筛选，subject和grade传空字符串，后端返回推荐
     const res = await api.post('/match/teachers/ai', params)
     if (res.status === 200 && res.data && Array.isArray(res.data.content)) {
       teachers.value = res.data.content
+      totalPages.value = Math.ceil(res.data.totalElements / params.size);
     } else {
       teachers.value = []
       error.value = '未获取到教师数据'
@@ -153,6 +163,22 @@ async function fetchTeachers() {
     error.value = '获取教师列表失败'
   } finally {
     loading.value = false
+  }
+}
+
+// 上一页按钮逻辑
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchTeachers(); // 重新获取数据
+  }
+}
+
+// 下一页按钮逻辑
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    fetchTeachers(); // 重新获取数据
   }
 }
 
@@ -218,7 +244,7 @@ p {
   top: 130px;
   left: 200px;
   width: 800px;
-  height: 400px;
+  height: 440px;
   margin: 2.5rem auto 0 auto;
   background: #f8fafc;
   border-radius: 12px;
@@ -328,6 +354,42 @@ p {
   color: #aaa;
   text-align: center;
   margin: 1.5rem 0;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  position: relative;
+  bottom: 18px;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:hover {
+  background: #f0f4ff;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background: #e4e6ef;
+  border-color: #d1d5db;
+}
+
+.page-info {
+  position: relative;
+  bottom: 18px;
+  margin: 0 0.5rem;
+  font-size: 1rem;
+  color: #64748b;
 }
 /* 右上角个人中心按钮样式 */
 .profile-btn {
