@@ -174,7 +174,7 @@ async function fetchStudents() {
     }
   } catch (e) {
     students.value = []
-    error.value = '获取学生列表失败'
+    error.value = '第一次登陆请先完善个人信息'
   } finally {
     loading.value = false
   }

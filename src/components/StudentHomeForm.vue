@@ -189,7 +189,7 @@ async function fetchTeachers() {
     }
   } catch (e) {
     teachers.value = []
-    error.value = '获取教师列表失败'
+    error.value = '第一次登陆请先完善个人信息'
   } finally {
     loading.value = false
   }
