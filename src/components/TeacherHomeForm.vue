@@ -66,6 +66,11 @@
           </li>
         </ul>
       </div>
+      <div class="pagination">
+        <button class="prev-page" @click="prevPage" :disabled="currentPage === 1">上一页</button>
+        <span class="page-info">第 {{ currentPage }} 页/共 {{ totalPages }} 页</span>
+        <button class="next-page" @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
+      </div>
     </div>
   </div>
 </template>
@@ -91,6 +96,10 @@ const students = ref([])
 const loading = ref(false)
 const error = ref('')
 const unreadCount = ref(0)
+
+// 定义当前页码和总页数
+let currentPage = ref(1); // 当前页码
+let totalPages = ref(1); // 总页数
 
 // 获取当前教师ID
 let teacherId = 0
@@ -123,13 +132,14 @@ async function fetchStudents() {
       subject: filter.value.subject || '',
       grade: filter.value.grade || '',
       minScore: filter.value.minScore || undefined,
-      page: 0,
-      size: 10
+      page: currentPage.value - 1,
+      size: 6
     }
     // 如果没有筛选，subject和grade传空字符串，后端返回推荐
     const res = await api.post('/match/students/ai', params)
     if (res.status === 200 && res.data && Array.isArray(res.data.content)) {
       students.value = res.data.content
+      totalPages.value = Math.ceil(res.data.totalElements / params.size);
     } else {
       students.value = []
       error.value = '未获取到学生数据'
@@ -139,6 +149,22 @@ async function fetchStudents() {
     error.value = '获取学生列表失败'
   } finally {
     loading.value = false
+  }
+}
+
+// 上一页按钮逻辑
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchTeachers(); // 重新获取数据
+  }
+}
+
+// 下一页按钮逻辑
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    fetchTeachers(); // 重新获取数据
   }
 }
 
@@ -180,20 +206,37 @@ h2 {
   font-weight: 900;
   color: #6366f1;
   margin-bottom: 1.5rem;
+  position: absolute;
+  top: 0px;
+  left: 100px;
+}
+p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+  position: absolute;
+  top: 75px;
+  left: 100px;
 }
 .match-student-section {
+  position: absolute;
+  top: 130px;
+  left: 200px;
+  width: 800px;
+  height: 440px;
   margin: 2.5rem auto 0 auto;
   background: #f8fafc;
   border-radius: 12px;
   padding: 1.5rem 1rem 2rem 1rem;
-  max-width: 480px;
+  /* max-width: 480px; */
   box-shadow: 0 2px 8px #e0e7ff55;
 }
 .match-student-section h3 {
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   color: #6366f1;
   margin-bottom: 1.2rem;
+  margin-top: 0.5rem;
   font-weight: 700;
 }
 .filter-form {
@@ -234,8 +277,13 @@ h2 {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 .student-item {
+  width: 27%;
+  height: 80px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 6px #e0e7ff55;
@@ -284,6 +332,42 @@ h2 {
   color: #aaa;
   text-align: center;
   margin: 1.5rem 0;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  position: relative;
+  bottom: 18px;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:hover {
+  background: #f0f4ff;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background: #e4e6ef;
+  border-color: #d1d5db;
+}
+
+.page-info {
+  position: relative;
+  bottom: 18px;
+  margin: 0 0.5rem;
+  font-size: 1rem;
+  color: #64748b;
 }
 /* 右上角个人中心按钮样式 */
 .profile-btn {
