@@ -1,10 +1,6 @@
 # teach_vue
 
-> [!IMPORTANT]
->
-> 项目名称 teach_vue
-
-#### 安装环境
+## 安装环境
 
 1. 下载nodejs1.1.12并安装
 
