@@ -220,10 +220,10 @@ p {
 }
 .match-student-section {
   position: absolute;
-  top: 130px;
-  left: 200px;
-  width: 800px;
-  height: 440px;
+  top: 20%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
   margin: 2.5rem auto 0 auto;
   background: #f8fafc;
   border-radius: 12px;
@@ -334,6 +334,9 @@ p {
   margin: 1.5rem 0;
 }
 .pagination {
+  position: absolute;
+  bottom: 0%;
+  left: 35%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -342,7 +345,7 @@ p {
 
 .pagination button {
   position: relative;
-  bottom: 18px;
+  bottom: 20px;
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   border: 1px solid #d1d5db;

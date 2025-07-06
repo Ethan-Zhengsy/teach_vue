@@ -241,10 +241,10 @@ p {
 }
 .match-teacher-section {
   position: absolute;
-  top: 130px;
-  left: 200px;
-  width: 800px;
-  height: 440px;
+  top: 20%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
   margin: 2.5rem auto 0 auto;
   background: #f8fafc;
   border-radius: 12px;
@@ -300,11 +300,11 @@ p {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 .teacher-item {
   width: 27%;
-  height: 80px;
+  height: 70px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 6px #e0e7ff55;
@@ -356,6 +356,9 @@ p {
   margin: 1.5rem 0;
 }
 .pagination {
+  position: absolute;
+  bottom: 0%;
+  left: 35%;
   display: flex;
   justify-content: center;
   align-items: center;
