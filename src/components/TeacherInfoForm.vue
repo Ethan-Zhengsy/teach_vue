@@ -88,7 +88,7 @@ onMounted(async () => {
       error.value = '获取教师信息失败'
     }
   } catch (e) {
-    error.value = '获取教师信息失败'
+    error.value = '请完善个人信息'
   } finally {
     loading.value = false
   }
