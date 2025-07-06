@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- 头像显示区域 -->
+    <div class="avatar-info">
+      <img v-if="UserInfo0.avatar" :src="UserInfo0.avatar" alt="头像" class="avatar-img" />
+      <div v-else class="avatar-placeholder">无头像</div>
+    </div>
     <!-- 右上角个人中心按钮 -->
     <button class="profile-btn" @click="goToUserProfile">
       个人中心
@@ -110,8 +115,31 @@ onMounted(() => {
   teacherId = userInfo.userId || 0
   fetchStudents()
   fetchUnreadCount()
-  // 可选：定时刷新未读数
   setInterval(fetchUnreadCount, 3000)
+})
+
+const UserInfo0 = ref({})
+const Username0 = ref('')
+let TeacherId0 = 0
+onMounted(async () => {
+  // 从 localStorage 获取用户名
+  UserInfo0.value = JSON.parse(localStorage.getItem('userInfo') || '{}')
+  Username0.value = UserInfo0.value.username || '教师'
+  TeacherId0 = UserInfo0.value.userId || 0
+    // 优先请求头像接口
+  const avatarRes = await api.get('/file/listavatar', { params: { userId: TeacherId0 } })
+  if (avatarRes.status === 200 && avatarRes.data) {
+    // console.log('Avatar response:', avatarRes.data);
+    UserInfo0.value.avatar = avatarRes.data
+  } else {
+    // 如果头像接口没有返回，则用 userInfo 自带的 avatar 字段或本地缓存
+    const localAvatar = (() => {
+      try {
+        return JSON.parse(localStorage.getItem('userInfo') || '{}').avatar || ''
+      } catch { return '' }
+    })()
+    UserInfo0.value.avatar = UserInfo0.value.avatar || localAvatar
+  }
 })
 
 // 性别格式化
@@ -283,7 +311,7 @@ p {
 }
 .student-item {
   width: 27%;
-  height: 80px;
+  height: 70px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 6px #e0e7ff55;
@@ -420,5 +448,36 @@ p {
   padding: 0.1rem 0.4rem;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+
+.avatar-info {
+  position: absolute;
+  top: 10px;
+  left: 270px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f0f0f0;
+  border: 1px solid #eee;
+}
+.avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 1px solid #eee;
 }
 </style>
