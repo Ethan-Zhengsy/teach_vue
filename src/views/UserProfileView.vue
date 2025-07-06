@@ -53,10 +53,11 @@ const activeKey = ref('account')
   border-radius: 12px;
   box-shadow: 0 4px 24px #e0e7ff33;
   margin: 40px auto;
-  max-width: 900px;
+  /* max-width: 900px; */
 }
 .sidebar {
-  width: 180px;
+  /* width: 380px; */
+  width: 25%;
   background: #fff;
   border-right: 1px solid #e5e7eb;
   display: flex;
@@ -81,7 +82,7 @@ const activeKey = ref('account')
 }
 .content-area {
   flex: 1;
-  padding: 2.5rem 2.5rem;
+  padding: 2.5rem 10rem;
   min-width: 0;
 }
 </style>
